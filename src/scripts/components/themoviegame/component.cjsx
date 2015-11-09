@@ -259,6 +259,10 @@ module.exports = React.createClass
         answer = <TextField hintText="Type Answer" underlineFocusStyle={{borderColor: "#f44355"}} hintStyle={{color: '#f44355'}} onChange={@handleAnswerChange} onEnterKeyDown={@handleAnswer}/>
       else
         answer = <Loader />
+      if @state.movie.backdrop_path is null
+        source = @state.movie.poster_path
+      else
+        source = @state.movie.backdrop_path
       <div className="movie-game-container">
         <Card initiallyExpanded={true}>
           <CardHeader
@@ -266,7 +270,7 @@ module.exports = React.createClass
             subtitle="get ready to fight"
             avatar={<Avatar>{@state.score}</Avatar>}/>
           <CardMedia overlay={<CardTitle title="Name an actor or actress in" subtitle={@state.movie.title}/>}>
-            <img src={"http://image.tmdb.org/t/p/w780" + @state.movie.backdrop_path}/>
+            <img src={"http://image.tmdb.org/t/p/w780" + source}/>
           </CardMedia>
           {answer}
             <ul id="searchResults" className="result-list hidden"></ul>
