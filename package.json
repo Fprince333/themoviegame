@@ -1,7 +1,11 @@
 {
   "private": true,
-  "name": "crossfield-react-starter",
-  "description": "Starter app for creating React.js web applications at Crossfield",
+  "name": "themoviegame-web",
+  "description": "Movie > Actor > Movie > Actor > ...",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fprince333/themoviegame-web"
+  },
   "version": "0.0.1",
   "engines": {
     "node": ">=4.1 <5",
@@ -52,5 +56,6 @@
   "scripts": {
     "watch": "./node_modules/.bin/gulp watch",
     "build": "./node_modules/.bin/gulp build"
-  }
+  },
+  "license": "MIT"
 }
