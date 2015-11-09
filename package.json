@@ -13,7 +13,6 @@
     "coffee-react-transform": "^3.1.0",
     "coffee-script": "^1.9.3",
     "css-loader": "^0.14.4",
-    "express": "^4.13.3",
     "gulp": "^3.9.0",
     "gulp-compass": "^2.1.0",
     "gulp-load-plugins": "^0.10.0",
@@ -52,8 +51,6 @@
   "main": "server.coffee",
   "scripts": {
     "watch": "./node_modules/.bin/gulp watch",
-    "build": "./node_modules/.bin/gulp build",
-    "postinstall": "webpack --config ./webpack.production.config.js --progress --colors",
-    "start": "node server.js"
+    "build": "./node_modules/.bin/gulp build"
   }
 }
