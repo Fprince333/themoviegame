@@ -55,8 +55,7 @@
   "main": "server.coffee",
   "scripts": {
     "watch": "./node_modules/.bin/gulp watch",
-    "build": "./node_modules/.bin/gulp build",
-    "postinstall": "gulp default"
+    "build": "./node_modules/.bin/gulp build"
   },
   "license": "MIT"
 }
