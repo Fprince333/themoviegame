@@ -2,6 +2,12 @@ require("./style.scss")
 FormData = require('react-form-data')
 $ = require('jquery')
 Api = require("../../services/api")
+Card = require 'material-ui/lib/card/card'
+CardTitle = require 'material-ui/lib/card/card-title'
+CardActions = require 'material-ui/lib/card/card-actions'
+FlatButton = require 'material-ui/lib/flat-button'
+TextField = require 'material-ui/lib/text-field'
+
 
 module.exports = React.createClass
   displayName: 'LeaderboardForm',
@@ -24,7 +30,14 @@ module.exports = React.createClass
       @props.visibility(false)
 
   render: ->
-    <form onChange={@.updateFormData} onSubmit={@handleSubmit}>
-      <input type='text' name='entry[name]'/>
-      <input type="submit" value="Submit" />
-    </form>
+    <Card>
+      <CardTitle title="Nice Round!" subtitle={"Score: " + @props.score}/>
+      <CardActions>
+        <form onChange={@.updateFormData} onSubmit={@handleSubmit}>
+          <TextField hintText="Enter Name" name='entry[name]' underlineFocusStyle={{borderColor: "#f44355"}} hintStyle={{color: '#f44355'}}/>
+          <br/>
+          <FlatButton type="submit" label="Save to Leaderboard">
+          </FlatButton>
+        </form>
+      </CardActions>
+    </Card>

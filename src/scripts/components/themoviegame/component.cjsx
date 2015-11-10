@@ -23,6 +23,9 @@ injectTapEventPlugin()
 module.exports = React.createClass
   displayName: 'TheMovieGame'
 
+  giveUp: ->
+    @setState(showSaveModal: true)
+
   restart: ->
     @setState(isLoading: true)
     prom = if @state.totalMoviePages > 1 then Api.getRandomMovie(Math.floor(Math.random()*@state.totalMoviePages)) else Api.getRandomMovie(@state.totalMoviePages)
@@ -250,8 +253,6 @@ module.exports = React.createClass
       <Loader />
     else if @state.showSaveModal
       <div className="movie-game-container">
-        <h2> Nice {@state.score} Rounds!</h2>
-        <h3> Enter your name for the leaderboards </h3>
         <LeaderboardForm score={@state.score} visibility={@toggleModal}/>
       </div>
     else
