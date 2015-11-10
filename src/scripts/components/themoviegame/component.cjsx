@@ -263,6 +263,10 @@ module.exports = React.createClass
         question = <CardTitle title="Name an actor or actress in" subtitle={@state.movie.title}/>
       else
         question = <CardMedia overlay={<CardTitle title="Name an actor or actress in" subtitle={@state.movie.title}/>}><img src={"http://image.tmdb.org/t/p/w780" + @state.movie.backdrop_path}/></CardMedia>
+      if @state.score > 0
+        button = <FlatButton label="Give Up" primary={true} onClick={@giveUp}/>
+      else
+        button = <FlatButton label="Start Over" secondary={true} onClick={@restart}/>
       <div className="movie-game-container">
         <Card initiallyExpanded={true}>
           <CardHeader
@@ -272,8 +276,8 @@ module.exports = React.createClass
           {question}
           {answer}
             <ul id="searchResults" className="result-list hidden"></ul>
-          <CardActions>
-            <FlatButton label="Start Over" onClick={@restart}/>
+          <CardActions style={textAlign: "right"} >
+            {button}
           </CardActions>
         </Card>
       </div>
