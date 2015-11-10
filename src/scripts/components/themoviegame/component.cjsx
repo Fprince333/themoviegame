@@ -266,8 +266,8 @@ module.exports = React.createClass
       <div className="movie-game-container">
         <Card initiallyExpanded={true}>
           <CardHeader
+            textStyle={{verticalAlign: "super"}}
             title="Score"
-            subtitle="get ready to fight"
             avatar={<Avatar>{@state.score}</Avatar>}/>
           {question}
           {answer}
