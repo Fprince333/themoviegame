@@ -128,7 +128,7 @@ module.exports = React.createClass
     prom.then (res) =>
       if res.results.length > 0
         @appendResults(guess, res.results)
-    @setState({answer: e.target.value})
+    @setState(answer: e.target.value)
 
   appendResults: (guess, results) ->
     @clearResults()
@@ -139,21 +139,17 @@ module.exports = React.createClass
       @setState(suggestedActors: updatedSuggestedActorsList)
     @setState(showAutoComplete: true)
 
-  handleAutoComplete: (e) ->
-    @setState(
-      answer: e.target.innerHTML,
-      showAutoComplete: false
-    )
-    @handleAnswer()
-    @clearResults()
-
   clearResults: ->
     @setState(suggestedActors: [])
 
   handleAnswer: (e) ->
     e.preventDefault() if e
-    console.log "Answer: " + @state.answer
-    @setState( isGuessable: false )
+    guess = e.target.value || e.target.innerHTML
+    @setState(
+      isGuessable: false ,
+      showAutoComplete: false,
+      answer: guess
+    )
     prom = Api.getMovieCredits(@state.movie.id.toString())
     prom.always =>
       console.log("done")
@@ -271,7 +267,7 @@ module.exports = React.createClass
             avatar={<Avatar>{@state.score}</Avatar>}/>
           <Question hasPoster={@state.movie.backdrop_path} movie={@state.movie}/>
           <Answer isGuessable={@state.isGuessable} onChange={@handleAnswerChange} onEnterKeyDown={@handleAnswer}/>
-          <AutoCompleteList actors={@state.suggestedActors} visible={@state.showAutoComplete} onClick={@handleAutoComplete}/>
+          <AutoCompleteList actors={@state.suggestedActors} visible={@state.showAutoComplete} onClick={@handleAnswer}/>
           <CardActions style={textAlign: "right"} >
             {button}
           </CardActions>
