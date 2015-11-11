@@ -2,6 +2,8 @@ require("./style.scss")
 LeaderboardForm = require '../../components/leaderboard_form/component'
 MovieList = require '../../components/movie_list/component'
 ActorList = require '../../components/actor_list/component'
+Question = require '../../components/question/component'
+Answer = require "../../components/answer/component"
 Api = require "../../services/api"
 Loader = require "../../components/loader/component"
 _ = require 'underscore'
@@ -10,11 +12,8 @@ _ = require 'underscore'
 Card = require 'material-ui/lib/card/card'
 CardHeader = require 'material-ui/lib/card/card-header'
 Avatar = require 'material-ui/lib/avatar'
-CardMedia = require 'material-ui/lib/card/card-media'
-CardTitle = require 'material-ui/lib/card/card-title'
 CardActions = require 'material-ui/lib/card/card-actions'
 FlatButton = require 'material-ui/lib/flat-button'
-TextField = require 'material-ui/lib/text-field'
 Colors = require 'material-ui/lib/styles/colors'
 
 injectTapEventPlugin = require "react-tap-event-plugin"
@@ -256,14 +255,6 @@ module.exports = React.createClass
         <LeaderboardForm score={@state.score} visibility={@toggleModal}/>
       </div>
     else
-      if @state.isGuessable
-        answer = <TextField hintText="Type Answer" underlineFocusStyle={{borderColor: "#f44355"}} hintStyle={{color: '#f44355'}} onChange={@handleAnswerChange} onEnterKeyDown={@handleAnswer}/>
-      else
-        answer = <Loader />
-      if @state.movie.backdrop_path is null
-        question = <CardTitle title="Name an actor or actress in" subtitle={@state.movie.title}/>
-      else
-        question = <CardMedia overlay={<CardTitle title="Name an actor or actress in" subtitle={@state.movie.title}/>}><img src={"http://image.tmdb.org/t/p/w780" + @state.movie.backdrop_path}/></CardMedia>
       if @state.score > 0
         button = <FlatButton label="Give Up" primary={true} onClick={@giveUp}/>
       else
@@ -274,9 +265,9 @@ module.exports = React.createClass
             textStyle={{verticalAlign: "super"}}
             title="Score"
             avatar={<Avatar>{@state.score}</Avatar>}/>
-          {question}
-          {answer}
             <ul id="searchResults" className="result-list hidden"></ul>
+          <Question hasPoster={@state.movie.backdrop_path} movie={@state.movie}/>
+          <Answer isGuessable={@state.isGuessable} onChange={@handleAnswerChange} onEnterKeyDown={@handleAnswer}/>
           <CardActions style={textAlign: "right"} >
             {button}
           </CardActions>
