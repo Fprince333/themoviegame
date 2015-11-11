@@ -4,6 +4,7 @@ MovieList = require '../../components/movie_list/component'
 ActorList = require '../../components/actor_list/component'
 Question = require '../../components/question/component'
 Answer = require "../../components/answer/component"
+AutoCompleteList = require '../../components/autocomplete/component'
 Api = require "../../services/api"
 Loader = require "../../components/loader/component"
 _ = require 'underscore'
@@ -14,7 +15,9 @@ CardHeader = require 'material-ui/lib/card/card-header'
 Avatar = require 'material-ui/lib/avatar'
 CardActions = require 'material-ui/lib/card/card-actions'
 FlatButton = require 'material-ui/lib/flat-button'
+
 Colors = require 'material-ui/lib/styles/colors'
+
 
 injectTapEventPlugin = require "react-tap-event-plugin"
 injectTapEventPlugin()
@@ -131,23 +134,21 @@ module.exports = React.createClass
     @clearResults()
     i = 0
     while i < results.length and i < 3
-      ul = document.getElementById("searchResults")
-      li = document.createElement('li')
-      li.addEventListener('click', @handleAutoComplete)
-      li.innerHTML = results[i].name
-      ul.appendChild li
+      updatedSuggestedActorsList = @state.suggestedActors.concat([results[i]])
       i++
-    if ul.className != 'result-list'
-      ul.className = 'result-list'
+      @setState(suggestedActors: updatedSuggestedActorsList)
+    @setState(showAutoComplete: true)
 
   handleAutoComplete: (e) ->
-    @setState({answer: e.target.innerHTML})
+    @setState(
+      answer: e.target.innerHTML,
+      showAutoComplete: false
+    )
     @handleAnswer()
+    @clearResults()
 
   clearResults: ->
-    ul = document.getElementById("searchResults")
-    ul.className = 'result-list hidden'
-    ul.innerHTML = ''
+    @setState(suggestedActors: [])
 
   handleAnswer: (e) ->
     e.preventDefault() if e
@@ -213,11 +214,14 @@ module.exports = React.createClass
     {
       isLoading: true,
       score: 0,
+      answer: null,
       movie: {},
       actor: {},
       currentActorId: null,
       usedMovies: [],
       usedActors: [],
+      suggestedActors: [],
+      showAutoComplete: false,
       disallowedCategories: [10770, 99, 10769, 16],
       totalMoviePages: 1,
       isGuessable: true,
@@ -265,9 +269,9 @@ module.exports = React.createClass
             textStyle={{verticalAlign: "super"}}
             title="Score"
             avatar={<Avatar>{@state.score}</Avatar>}/>
-            <ul id="searchResults" className="result-list hidden"></ul>
           <Question hasPoster={@state.movie.backdrop_path} movie={@state.movie}/>
           <Answer isGuessable={@state.isGuessable} onChange={@handleAnswerChange} onEnterKeyDown={@handleAnswer}/>
+          <AutoCompleteList actors={@state.suggestedActors} visible={@state.showAutoComplete} onClick={@handleAutoComplete}/>
           <CardActions style={textAlign: "right"} >
             {button}
           </CardActions>
