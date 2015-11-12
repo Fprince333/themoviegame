@@ -18,6 +18,9 @@ module.exports = React.createClass
       'entry[score]': @props.score
     }
 
+  handleSkip: ->
+    @props.visibility(false)
+
   handleSubmit: (e) ->
     e.preventDefault()
     prom = Api.savePlayerScore(@formData)
@@ -36,7 +39,9 @@ module.exports = React.createClass
         <form onChange={@.updateFormData} onSubmit={@handleSubmit}>
           <TextField hintText="Enter Name" name='entry[name]' underlineFocusStyle={{borderColor: "#f44355"}} hintStyle={{color: '#f44355'}}/>
           <br/>
-          <FlatButton label="Save to Leaderboard">
+          <FlatButton primary={true} onClick={@handleSkip} label="Skip">
+          </FlatButton>
+          <FlatButton secondary={true} label="Save to Leaderboard">
             <input className="hidden-input" type="submit" />
           </FlatButton>
         </form>
