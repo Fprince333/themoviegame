@@ -66,9 +66,10 @@ module.exports = React.createClass
       console.log "handle error" + err
     prom.then (res) =>
       movieIndex = Math.floor(Math.random()*res.cast.length)
+      movieCheck = @checkMovie(res.cast[movieIndex].id)
       while @movieHasBeenUsed(res.cast[movieIndex])
         movieIndex++
-      while @checkMovie(res.cast[movieIndex].id)
+      while movieCheck
         movieIndex++
       @updateMovieInfo(res.cast[movieIndex].id)
 
@@ -218,7 +219,7 @@ module.exports = React.createClass
       usedActors: [],
       suggestedActors: [],
       showAutoComplete: false,
-      disallowedCategories: [10770, 99, 10769, 16],
+      disallowedCategories: [10770, 99, 10769, 16, 10751],
       totalMoviePages: 1,
       isGuessable: true,
       showSaveModal: false
@@ -237,7 +238,7 @@ module.exports = React.createClass
       movieCheck = @isNotAllowed(movie.genre_ids)
       while movieCheck
         movie = res.results[Math.floor(Math.random()*res.results.length)]
-        movieCheck = @isNotAllowed(movie)
+        movieCheck = @isNotAllowed(movie.genre_ids)
         movieCheck
       updatedUsedMovieList = @state.usedMovies.concat([movie])
       @setState(
