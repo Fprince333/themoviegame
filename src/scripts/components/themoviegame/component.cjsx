@@ -167,7 +167,7 @@ module.exports = React.createClass
     correct = false
     actorId = null
     arr.forEach (el) ->
-      if el.name is answer
+      if el.name.toLowerCase() is answer.toLowerCase()
         actorId = el.id
         correct = true
     @setState({currentActorId: actorId })
