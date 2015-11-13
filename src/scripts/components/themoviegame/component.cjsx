@@ -211,6 +211,7 @@ module.exports = React.createClass
     }
 
   componentDidMount: ->
+    console.log "mounted"
     prom = Api.getRandomMovie(@state.totalMoviePages)
     prom.always =>
       console.log("done")
@@ -220,30 +221,32 @@ module.exports = React.createClass
     prom.then (res) =>
       totalPages = res.total_pages
       movie = res.results[Math.floor(Math.random()*res.results.length)]
-      movieCheck = @isNotAllowed(movie.genre_ids)
-      while movieCheck
-        movie = res.results[Math.floor(Math.random()*res.results.length)]
-        movieCheck = @isNotAllowed(movie.genre_ids)
-        movieCheck
-      updatedUsedMovieList = @state.usedMovies.concat([movie])
-      @setState(
-        movie: movie,
-        usedMovies: updatedUsedMovieList
-        isLoading: false,
-        totalMoviePages: totalPages
-      )
+      if @isNotAllowed(movie.genre_ids)
+        @restart()
+        console.log "movie " + movie.title + " isn't up to snuff because it's a weird category"
+      else if movie.original_language isnt "en"
+        @restart()
+        console.log "movie " + movie.title + " isn't up to snuff because it isn't in english"
+      else
+        updatedUsedMovieList = @state.usedMovies.concat([movie])
+        @setState(
+          movie: movie,
+          usedMovies: updatedUsedMovieList
+          isLoading: false,
+          totalMoviePages: totalPages
+        )
 
   componentDidUpdate: (prevProps, prevState) ->
-    if prevState.movie isnt @state.movie and not _.isEmpty(prevState.movie)
+    if prevState.movie isnt @state.movie and not _.isEmpty(prevState.movie) and @state.score > 0
       if @isTooObscure(@state.movie.popularity)
         @continue()
-        console.log "movie isn't up to snuff because of popularity"
+        console.log "movie " + @state.movie.title + " isn't up to snuff because of popularity"
       else if @isNotAllowed(@state.movie.genre_ids)
         @continue()
-        console.log "movie isn't up to snuff because it's a weird category"
+        console.log "movie " + @state.movie.title + " isn't up to snuff because it's a weird category"
       else if @state.movie.original_language isnt "en"
         @continue()
-        console.log "movie isn't up to snuff because it isn't in english"
+        console.log "movie " + @state.movie.title + " isn't up to snuff because it isn't in english"
       else
         @setState(
           isLoading: false,
