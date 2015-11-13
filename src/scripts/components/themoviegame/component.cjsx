@@ -58,6 +58,7 @@ module.exports = React.createClass
       )
 
   continue: ->
+    console.log "continuing..."
     @setState(isLoading: true)
     prom = Api.getNextMovie(@state.currentActorId)
     prom.always =>
@@ -66,10 +67,7 @@ module.exports = React.createClass
       console.log "handle error" + err
     prom.then (res) =>
       movieIndex = Math.floor(Math.random()*res.cast.length)
-      movieCheck = @checkMovie(res.cast[movieIndex].id)
       while @movieHasBeenUsed(res.cast[movieIndex])
-        movieIndex++
-      while movieCheck
         movieIndex++
       @updateMovieInfo(res.cast[movieIndex].id)
 
@@ -81,26 +79,13 @@ module.exports = React.createClass
       console.log "handle error" + err
     prom.then (res) =>
       updatedUsedMovieList = @state.usedMovies.concat([res])
-      @setState({
+      @setState(
         movie: res,
-        isLoading: false,
-        usedMovies: updatedUsedMovieList,
-        isGuessable: true
-      })
+        usedMovies: updatedUsedMovieList
+      )
 
-  checkMovie: (movieId) ->
-    check = false
-    prom = Api.getMovieInfo(movieId)
-    prom.always =>
-      console.log "done"
-    prom.fail (err) ->
-      console.log "handle error" + err
-    prom.then (res) =>
-      genreIds = []
-      res.genres.forEach (el) ->
-        genreIds.push(el)
-      check = @isNotAllowed(genreIds)
-    check
+  isTooObscure: (popularity) ->
+    if popularity < 0.5 then true else false
 
   movieHasBeenUsed: (mov) ->
     used = false
@@ -247,6 +232,23 @@ module.exports = React.createClass
         isLoading: false,
         totalMoviePages: totalPages
       )
+
+  componentDidUpdate: (prevProps, prevState) ->
+    if prevState.movie isnt @state.movie and not _.isEmpty(prevState.movie)
+      if @isTooObscure(@state.movie.popularity)
+        @continue()
+        console.log "movie isn't up to snuff because of popularity"
+      else if @isNotAllowed(@state.movie.genre_ids)
+        @continue()
+        console.log "movie isn't up to snuff because it's a weird category"
+      else if @state.movie.original_language isnt "en"
+        @continue()
+        console.log "movie isn't up to snuff because it isn't in english"
+      else
+        @setState(
+          isLoading: false,
+          isGuessable: true
+        )
 
   render: ->
     if @state.isLoading
