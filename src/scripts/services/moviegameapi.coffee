@@ -8,6 +8,7 @@ urlForPath = (path) ->
 request = (path, type, data, options={}) ->
     url = urlForPath(path)
     $.ajax
+      async: false
       cache: options.cache || false
       type: type
       url: url
