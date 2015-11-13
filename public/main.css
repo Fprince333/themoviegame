@@ -510,6 +510,9 @@ th {
 .clear {
   clear: both; }
 
+.hidden {
+  display: none; }
+
 /* ==|====================
    Layout/Main
    ======================= */
@@ -517,3 +520,11 @@ body {
   font-family: "Roboto", Arial, sans-serif;
   background-color: #ebebeb;
   text-align: center; }
+
+.movie-game-container {
+  max-width: 512px;
+  margin: 0 auto;
+  padding: 10px; }
+  @media only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 13 / 10), only screen and (min-height: 800px) and (min-width: 1200px), only screen and (min-resolution: 120dpi) {
+    .movie-game-container {
+      max-width: 1024px; } }
