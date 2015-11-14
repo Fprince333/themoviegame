@@ -26,7 +26,10 @@ module.exports = React.createClass
   displayName: 'TheMovieGame'
 
   giveUp: ->
-    @setState(showSaveModal: true)
+    if @state.score > 5
+      @setState(showSaveModal: true)
+    else
+      @restart()
 
   restart: ->
     @setState(isLoading: true)
@@ -146,7 +149,8 @@ module.exports = React.createClass
       if isCorrect
         @getActorInfo(@state.currentActorId)
       else
-        @setState(showSaveModal: true)
+        if @state.score > 5
+          @setState(showSaveModal: true)
 
   checkAnswer: (arr, answer) ->
     correct = false
