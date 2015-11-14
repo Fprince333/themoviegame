@@ -1,7 +1,7 @@
 TheMovieGame = require './components/themoviegame/component'
 
 module.exports = React.createClass
-  displayName: 'Home'
+  displayName: 'Play'
 
   componentDidMount: ->
     window.scroll(0,0)

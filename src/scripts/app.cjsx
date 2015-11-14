@@ -8,9 +8,6 @@ module.exports = React.createClass
     <div>
       <Header>
         <div>
-          <Link to="home">Home</Link>
-        </div>
-        <div>
           <Link to="play">Play</Link>
         </div>
         <div>
