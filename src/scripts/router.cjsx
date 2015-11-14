@@ -14,7 +14,7 @@ App = require './app'
 
 routes = (
   <Route handler={App}>
-    <Route name="play" handler={Play} path="/play" />
+    <Route name="play" handler={Play} path="/" />
     <Route name="leaderboard" handler={Leaderboard} path="/leaderboard" />
   </Route>
 )
