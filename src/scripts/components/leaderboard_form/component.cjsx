@@ -37,7 +37,7 @@ module.exports = React.createClass
       <CardTitle title="Nice Round!" subtitle={"Score: " + @props.score}/>
       <CardActions>
         <form onChange={@.updateFormData} onSubmit={@handleSubmit}>
-          <TextField hintText="Enter Name" name='entry[name]' underlineFocusStyle={{borderColor: "#f44355"}} hintStyle={{color: '#f44355'}}/>
+          <TextField required={true} hintText="Enter Name" name='entry[name]' underlineFocusStyle={{borderColor: "#f44355"}} hintStyle={{color: '#f44355'}}/>
           <br/>
           <FlatButton primary={true} onClick={@handleSkip} label="Skip">
           </FlatButton>
