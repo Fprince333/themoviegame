@@ -7,6 +7,8 @@ Answer = require "../../components/answer/component"
 AutoCompleteList = require '../../components/autocomplete/component'
 Api = require "../../services/api"
 Loader = require "../../components/loader/component"
+
+moment = require 'moment'
 _ = require 'underscore'
 
 
@@ -41,6 +43,9 @@ module.exports = React.createClass
     prom.then (res) =>
       totalPages = res.total_pages
       movie = res.results[Math.floor(Math.random()*res.results.length)]
+      if @isNotReleased(movie.release_date)
+        console.log "Movie " + movie.title + " isn't up to snuff because it hasn't come out yet"
+        @restart()
       if @isTooObscure(movie.popularity)
         console.log "Movie " + movie.title + " isn't up to snuff because of popularity"
         @restart()
@@ -97,6 +102,9 @@ module.exports = React.createClass
 
   isTooObscure: (popularity) ->
     if popularity < 0.5 then true else false
+
+  isNotReleased: (date) ->
+    if moment(date).isBefore(@state.today, 'day') then false else true
 
   movieHasBeenUsed: (mov) ->
     used = false
@@ -219,7 +227,8 @@ module.exports = React.createClass
       disallowedCategories: [10770, 99, 10769, 16, 10751],
       totalMoviePages: 1,
       isGuessable: true,
-      showSaveModal: false
+      showSaveModal: false,
+      today: moment()
     }
 
   componentDidMount: ->
@@ -250,6 +259,9 @@ module.exports = React.createClass
 
   componentDidUpdate: (prevProps, prevState) ->
     if prevState.movie isnt @state.movie and not _.isEmpty(prevState.movie) and @state.score > 0
+      if @isNotReleased(@state.movie.release_date)
+        @continue()
+        console.log "movie " + @state.movie.title + " isn't up to snuff because it hasn't come out yet"
       if @isTooObscure(@state.movie.popularity)
         @continue()
         console.log "movie " + @state.movie.title + " isn't up to snuff because of popularity"
