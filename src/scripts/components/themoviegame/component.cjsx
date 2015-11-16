@@ -39,6 +39,7 @@ module.exports = React.createClass
     prom.fail (err) ->
       console.log "handle error" + err
     prom.then (res) =>
+      totalPages = res.total_pages
       movie = res.results[Math.floor(Math.random()*res.results.length)]
       if @isTooObscure(movie.popularity)
         console.log "Movie " + movie.title + " isn't up to snuff because of popularity"
@@ -63,7 +64,8 @@ module.exports = React.createClass
           movie: movie,
           isLoading: false,
           usedMovies: updatedUsedMovieList,
-          isGuessable: true
+          isGuessable: true,
+          totalMoviePages: totalPages
         )
 
   continue: ->
