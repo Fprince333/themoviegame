@@ -6,4 +6,4 @@ module.exports = React.createClass
     if @props.isGuessable
       <TextField hintText="Type Answer" underlineFocusStyle={{borderColor: "#f44355"}} hintStyle={{color: '#f44355'}} onChange={@props.onChange} onEnterKeyDown={@props.onEnterKeyDown}/>
     else
-      <Loader />
+      <div></div>
