@@ -101,7 +101,7 @@ module.exports = React.createClass
       )
 
   isTooObscure: (popularity) ->
-    if popularity < 0.5 then true else false
+    if popularity < 0.1 then true else false
 
   isNotReleased: (date) ->
     if moment(date).isBefore(@state.today, 'day') then false else true
