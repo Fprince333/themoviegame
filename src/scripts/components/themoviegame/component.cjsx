@@ -40,25 +40,31 @@ module.exports = React.createClass
       console.log "handle error" + err
     prom.then (res) =>
       movie = res.results[Math.floor(Math.random()*res.results.length)]
-      movieCheck = @isNotAllowed(movie.genre_ids)
-      while movieCheck
-        movie = res.results[Math.floor(Math.random()*res.results.length)]
-        movieCheck = @isNotAllowed(movie.genre_ids)
-        movieCheck
-      if movie is @state.movie
-        console.log "TODO: Call the restart function again"
-      if @state.score > 0
-        @replaceState(@getInitialState())
-        updatedUsedMovieList = [movie]
+      if @isTooObscure(movie.popularity)
+        console.log "Movie " + movie.title + " isn't up to snuff because of popularity"
+        @restart()
+      else if @isNotAllowed(movie.genre_ids)
+        console.log "Movie " + movie.title + " isn't up to snuff because its category isn't allowed"
+        @restart()
+      else if movie.original_language isnt "en"
+        console.log "Movie " + movie.title + " isn't up to snuff because it's language isn't english"
+        @restart()
+      else if movie is @state.movie
+        console.log "Movie " + movie.title + " isn't up to snuff because it was just used"
+        @restart()
       else
-        updatedUsedMovieList = @state.usedMovies.concat([movie])
-      @setState(
-        score: 0,
-        movie: movie,
-        isLoading: false,
-        usedMovies: updatedUsedMovieList,
-        isGuessable: true
-      )
+        if @state.score > 0
+          @replaceState(@getInitialState())
+          updatedUsedMovieList = [movie]
+        else
+          updatedUsedMovieList = @state.usedMovies.concat([movie])
+        @setState(
+          score: 0,
+          movie: movie,
+          isLoading: false,
+          usedMovies: updatedUsedMovieList,
+          isGuessable: true
+        )
 
   continue: ->
     console.log "continuing..."
