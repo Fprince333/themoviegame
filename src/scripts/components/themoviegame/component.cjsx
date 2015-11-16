@@ -149,7 +149,7 @@ module.exports = React.createClass
 
   handleAnswer: (e) ->
     e.preventDefault() if e
-    guess = e.target.value || e.target.innerHTML
+    guess = e.target.value || e.target.innerText
     @setState(
       isGuessable: false ,
       showAutoComplete: false,
