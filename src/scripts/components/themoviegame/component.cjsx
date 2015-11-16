@@ -153,6 +153,7 @@ module.exports = React.createClass
     @setState(
       isGuessable: false ,
       showAutoComplete: false,
+      isLoading: true,
       answer: guess
     )
     prom = Api.getMovieCredits(@state.movie.id.toString())
