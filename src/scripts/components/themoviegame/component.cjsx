@@ -41,7 +41,7 @@ module.exports = React.createClass
     prom.fail (err) ->
       console.log "handle error" + err
     prom.then (res) =>
-      totalPages = res.total_pages
+      totalPages = if res.total_pages > 1000 then Math.floor(Math.random()*1000) else res.total_pages
       movie = res.results[Math.floor(Math.random()*res.results.length)]
       if @isNotReleased(movie.release_date)
         console.log "Movie " + movie.title + " isn't up to snuff because it hasn't come out yet"
@@ -240,7 +240,7 @@ module.exports = React.createClass
       console.log("handle error " + err)
       @setState(isLoading: false)
     prom.then (res) =>
-      totalPages = res.total_pages
+      totalPages = if res.total_pages > 1000 then Math.floor(Math.random()*1000) else res.total_pages
       movie = res.results[Math.floor(Math.random()*res.results.length)]
       if @isNotAllowed(movie.genre_ids)
         @restart()
