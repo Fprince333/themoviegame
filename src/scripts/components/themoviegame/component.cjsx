@@ -88,6 +88,7 @@ module.exports = React.createClass
       @updateMovieInfo(res.cast[movieIndex].id)
 
   updateMovieInfo: (movieId) ->
+    console.log "updating movie info..."
     prom = Api.getMovieInfo(movieId)
     prom.always =>
       console.log "done"
@@ -150,6 +151,7 @@ module.exports = React.createClass
   handleAnswer: (e) ->
     e.preventDefault() if e
     guess = e.target.value || e.target.innerText
+    console.log guess
     @setState(
       isGuessable: false ,
       showAutoComplete: false,
@@ -164,12 +166,14 @@ module.exports = React.createClass
     prom.then (res) =>
       isCorrect = @checkAnswer(res.cast, @state.answer)
       if isCorrect
+        console.log "Correct, " + @state.answer + " was in " + @state.movie.title
         @getActorInfo(@state.currentActorId)
       else
         if @state.score > 5
           @setState(showSaveModal: true)
 
   checkAnswer: (arr, answer) ->
+    console.log "Checking answer..."
     correct = false
     actorId = null
     arr.forEach (el) ->
@@ -259,6 +263,7 @@ module.exports = React.createClass
         )
 
   componentDidUpdate: (prevProps, prevState) ->
+    console.log "Component did update"
     if prevState.movie isnt @state.movie and not _.isEmpty(prevState.movie) and @state.score > 0
       if @isNotReleased(@state.movie.release_date)
         @continue()
