@@ -127,10 +127,10 @@ module.exports = React.createClass
       console.log "handle error" + err
     prom.then (res) =>
       if res.results.length > 0
-        @appendResults(guess, res.results)
+        @appendResults(res.results)
     @setState(answer: e.target.value)
 
-  appendResults: (guess, results) ->
+  appendResults: (results) ->
     @clearResults()
     i = 0
     while i < results.length and i < 3
