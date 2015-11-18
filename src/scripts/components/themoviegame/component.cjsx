@@ -6,9 +6,9 @@ Question = require '../../components/question/component'
 Answer = require "../../components/answer/component"
 AutoCompleteList = require '../../components/autocomplete/component'
 Api = require "../../services/api"
+Checker = require "../../services/checker"
 Loader = require "../../components/loader/component"
 
-moment = require 'moment'
 _ = require 'underscore'
 
 
@@ -44,13 +44,13 @@ module.exports = React.createClass
     prom.then (res) =>
       totalPages = if res.total_pages > 1000 then Math.floor(Math.random()*1000) else res.total_pages
       movie = res.results[Math.floor(Math.random()*res.results.length)]
-      if @isNotReleased(movie.release_date)
+      if Checker.isNotReleased(movie.release_date)
         console.log "Movie " + movie.title + " isn't up to snuff because it hasn't come out yet"
         @restart()
-      if @isTooObscure(movie.popularity)
+      else if Checker.isTooObscure(movie.popularity)
         console.log "Movie " + movie.title + " isn't up to snuff because of popularity"
         @restart()
-      else if @isNotAllowed(movie.genre_ids)
+      else if Checker.isNotAllowed(movie.genre_ids)
         console.log "Movie " + movie.title + " isn't up to snuff because its category isn't allowed"
         @restart()
       else if movie.original_language isnt "en"
@@ -101,15 +101,6 @@ module.exports = React.createClass
         movie: res,
         usedMovies: updatedUsedMovieList
       )
-
-  isTooObscure: (popularity) ->
-    if popularity < 0.1 then true else false
-
-  isNotReleased: (date) ->
-    if moment(date).isBefore(@state.today, 'day') then false else true
-
-  isTooOld: (date) ->
-    if moment(date).isBefore( moment().year(1975) , 'year') then true else false
 
   movieHasBeenUsed: (mov) ->
     used = false
@@ -216,9 +207,6 @@ module.exports = React.createClass
     })
     @continue()
 
-  isNotAllowed: (idArray) ->
-    if _.intersection(@state.disallowedCategories, idArray).length > 0 then return true else return false
-
   toggleModal: (visibility) ->
     @setState(showSaveModal: visibility)
     @restart()
@@ -238,8 +226,7 @@ module.exports = React.createClass
       disallowedCategories: [10770, 99, 10769, 16, 10751],
       totalMoviePages: 1,
       isGuessable: true,
-      showSaveModal: false,
-      today: moment()
+      showSaveModal: false
     }
 
   componentDidMount: ->
@@ -253,16 +240,19 @@ module.exports = React.createClass
     prom.then (res) =>
       totalPages = if res.total_pages > 1000 then Math.floor(Math.random()*1000) else res.total_pages
       movie = res.results[Math.floor(Math.random()*res.results.length)]
-      if @isNotAllowed(movie.genre_ids)
+      if Checker.isNotAllowed(movie.genre_ids)
         @restart()
         console.log "movie " + movie.title + " isn't up to snuff because it's a weird category"
       else if movie.original_language isnt "en"
         @restart()
         console.log "movie " + movie.title + " isn't up to snuff because it isn't in english"
-      else if @isNotReleased(movie.release_date)
+      else if Checker.isTooObscure(movie.popularity)
+        @restart()
+        console.log "movie " + @state.movie.title + " isn't up to snuff because of popularity"
+      else if Checker.isNotReleased(movie.release_date)
         @restart()
         console.log "movie " + movie.title + " isn't up to snuff because it hasn't come out yet"
-      else if @isTooOld(movie.release_date)
+      else if Checker.isTooOld(movie.release_date)
         @restart
         console.log "movie " + movie.title + " isn't up to snuff because it came out before 1975"
       else
@@ -277,18 +267,21 @@ module.exports = React.createClass
   componentDidUpdate: (prevProps, prevState) ->
     console.log "Component did update"
     if prevState.movie isnt @state.movie and not _.isEmpty(prevState.movie) and @state.score > 0
-      if @isNotReleased(@state.movie.release_date)
+      if Checker.isNotReleased(@state.movie.release_date)
         @continue()
         console.log "movie " + @state.movie.title + " isn't up to snuff because it hasn't come out yet"
-      else if @isTooObscure(@state.movie.popularity)
+      else if Checker.isTooObscure(@state.movie.popularity)
         @continue()
         console.log "movie " + @state.movie.title + " isn't up to snuff because of popularity"
-      else if @isNotAllowed(@state.movie.genre_ids)
+      else if Checker.isNotAllowed(@state.movie.genre_ids)
         @continue()
         console.log "movie " + @state.movie.title + " isn't up to snuff because it's a weird category"
       else if @state.movie.original_language isnt "en"
         @continue()
         console.log "movie " + @state.movie.title + " isn't up to snuff because it isn't in english"
+      else if Checker.isTooOld(@state.movie.release_date)
+        @restart
+        console.log "movie " +  @state.movie.title + " isn't up to snuff because it came out before 1975"
       else
         @setState(
           isLoading: false,
