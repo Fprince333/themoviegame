@@ -265,30 +265,38 @@ module.exports = React.createClass
           totalMoviePages: totalPages
         )
 
-  componentDidUpdate: (prevProps, prevState) ->
-    console.log "Component did update"
-    if prevState.movie isnt @state.movie and not _.isEmpty(prevState.movie) and @state.score > 0
-      if Checker.isNotReleased(@state.movie.release_date)
+  shouldComponentUpdate: (newProps, newState) ->
+    console.log newState
+    if newState.movie isnt @state.movie and not _.isEmpty(newState.movie) and @state.score > 0
+      if Checker.isNotReleased(newState.movie.release_date)
         @continue()
-        console.log "movie " + @state.movie.title + " isn't up to snuff because it hasn't come out yet"
-      else if Checker.isTooObscure(@state.movie.popularity)
+        console.log "movie " + newState.movie.title + " isn't up to snuff because it hasn't come out yet"
+        return false
+      else if Checker.isTooObscure(newState.movie.popularity)
         @continue()
-        console.log "movie " + @state.movie.title + " isn't up to snuff because of popularity"
-      else if Checker.isNotAllowed(@state.movie.genre_ids)
+        console.log "movie " + newState.movie.title + " isn't up to snuff because of popularity"
+        return false
+      else if Checker.isNotAllowed(newState.movie.genre_ids)
         @continue()
-        console.log "movie " + @state.movie.title + " isn't up to snuff because it's a weird category"
-      else if @state.movie.original_language isnt "en"
+        console.log "movie " + newState.movie.title + " isn't up to snuff because it's a weird category"
+        return false
+      else if newState.movie.original_language isnt "en"
         @continue()
-        console.log "movie " + @state.movie.title + " isn't up to snuff because it isn't in english"
-      else if Checker.isTooOld(@state.movie.release_date)
+        console.log "movie " + newState.movie.title + " isn't up to snuff because it isn't in english"
+        return false
+      else if Checker.isTooOld(newState.movie.release_date)
         @continue()
-        console.log "movie " +  @state.movie.title + " isn't up to snuff because it came out before 1975"
+        console.log "movie " +  newState.movie.title + " isn't up to snuff because it came out before 1975"
+        return false
       else
         console.log "movie passed the Checker tests"
         @setState(
           isLoading: false,
           isGuessable: true
         )
+        return true
+    else
+      return true
 
   render: ->
     if @state.isLoading
