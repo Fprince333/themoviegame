@@ -38,6 +38,7 @@ module.exports = React.createClass
     prom = if @state.totalMoviePages > 1 then Api.getRandomMovie(Math.floor(Math.random()*@state.totalMoviePages)) else Api.getRandomMovie(@state.totalMoviePages)
     prom.always =>
       console.log "done"
+      @setState( isLoading: false )
     prom.fail (err) ->
       console.log "handle error" + err
     prom.then (res) =>
@@ -244,9 +245,9 @@ module.exports = React.createClass
     prom = Api.getRandomMovie(@state.totalMoviePages)
     prom.always =>
       console.log("done")
+      @setState(isLoading: false)
     prom.fail (err) ->
       console.log("handle error " + err)
-      @setState(isLoading: false)
     prom.then (res) =>
       totalPages = if res.total_pages > 1000 then Math.floor(Math.random()*1000) else res.total_pages
       movie = res.results[Math.floor(Math.random()*res.results.length)]
