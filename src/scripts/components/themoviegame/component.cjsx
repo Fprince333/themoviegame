@@ -280,7 +280,7 @@ module.exports = React.createClass
         @continue()
         console.log "movie " + @state.movie.title + " isn't up to snuff because it isn't in english"
       else if Checker.isTooOld(@state.movie.release_date)
-        @continue
+        @continue()
         console.log "movie " +  @state.movie.title + " isn't up to snuff because it came out before 1975"
       else
         @setState(
