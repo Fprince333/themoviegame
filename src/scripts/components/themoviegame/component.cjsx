@@ -127,7 +127,6 @@ module.exports = React.createClass
     used
 
   handleAnswerChange: (e) ->
-    @clearResults()
     return unless e.target.value.length > 3
     guess = e.target.value
     prom = Api.getAutoCompleteOptions(encodeURI(guess))
@@ -150,7 +149,10 @@ module.exports = React.createClass
     @setState(showAutoComplete: true)
 
   clearResults: ->
-    @setState(suggestedActors: [])
+    @setState(
+      suggestedActors: [],
+      showAutoComplete: false
+    )
 
   handleAnswer: (e) ->
     e.preventDefault() if e
