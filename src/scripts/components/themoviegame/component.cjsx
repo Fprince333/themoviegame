@@ -280,7 +280,7 @@ module.exports = React.createClass
       if @isNotReleased(@state.movie.release_date)
         @continue()
         console.log "movie " + @state.movie.title + " isn't up to snuff because it hasn't come out yet"
-      if @isTooObscure(@state.movie.popularity)
+      else if @isTooObscure(@state.movie.popularity)
         @continue()
         console.log "movie " + @state.movie.title + " isn't up to snuff because of popularity"
       else if @isNotAllowed(@state.movie.genre_ids)
