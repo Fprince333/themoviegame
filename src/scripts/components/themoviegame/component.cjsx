@@ -166,10 +166,11 @@ module.exports = React.createClass
         console.log "Correct, " + @state.answer + " was in " + @state.movie.title
         @getActorInfo(@state.currentActorId)
       else
+        console.log "Incorrect, " + @state.answer + " was not in " + @state.movie.title
         if @state.score > 5
           @setState(showSaveModal: true)
+        @restart()
 
-  # THE BUG LIES SOMEWHERE IN THIS AREA WHEN THE ACTOR CHOICE IS INCORRECT
   checkAnswer: (arr, answer) ->
     console.log "Checking answer..."
     correct = false
