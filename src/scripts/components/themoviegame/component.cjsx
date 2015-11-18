@@ -269,24 +269,24 @@ module.exports = React.createClass
     console.log newState
     if newState.movie isnt @state.movie and not _.isEmpty(newState.movie) and @state.score > 0
       if Checker.isNotReleased(newState.movie.release_date)
-        @continue()
         console.log "movie " + newState.movie.title + " isn't up to snuff because it hasn't come out yet"
+        @continue()
         return false
       else if Checker.isTooObscure(newState.movie.popularity)
-        @continue()
         console.log "movie " + newState.movie.title + " isn't up to snuff because of popularity"
+        @continue()
         return false
       else if Checker.isNotAllowed(newState.movie.genre_ids)
-        @continue()
         console.log "movie " + newState.movie.title + " isn't up to snuff because it's a weird category"
+        @continue()
         return false
       else if newState.movie.original_language isnt "en"
-        @continue()
         console.log "movie " + newState.movie.title + " isn't up to snuff because it isn't in english"
+        @continue()
         return false
       else if Checker.isTooOld(newState.movie.release_date)
-        @continue()
         console.log "movie " +  newState.movie.title + " isn't up to snuff because it came out before 1975"
+        @continue()
         return false
       else
         console.log "movie passed the Checker tests"
