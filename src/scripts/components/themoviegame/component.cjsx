@@ -169,6 +169,7 @@ module.exports = React.createClass
         if @state.score > 5
           @setState(showSaveModal: true)
 
+  # THE BUG LIES SOMEWHERE IN THIS AREA WHEN THE ACTOR CHOICE IS INCORRECT
   checkAnswer: (arr, answer) ->
     console.log "Checking answer..."
     correct = false
