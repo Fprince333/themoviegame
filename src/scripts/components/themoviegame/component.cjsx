@@ -253,7 +253,7 @@ module.exports = React.createClass
         @restart()
         console.log "movie " + movie.title + " isn't up to snuff because it hasn't come out yet"
       else if Checker.isTooOld(movie.release_date)
-        @restart
+        @restart()
         console.log "movie " + movie.title + " isn't up to snuff because it came out before 1975"
       else
         updatedUsedMovieList = @state.usedMovies.concat([movie])
@@ -280,7 +280,7 @@ module.exports = React.createClass
         @continue()
         console.log "movie " + @state.movie.title + " isn't up to snuff because it isn't in english"
       else if Checker.isTooOld(@state.movie.release_date)
-        @restart
+        @continue
         console.log "movie " +  @state.movie.title + " isn't up to snuff because it came out before 1975"
       else
         @setState(
