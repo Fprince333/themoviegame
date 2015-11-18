@@ -259,6 +259,9 @@ module.exports = React.createClass
       else if movie.original_language isnt "en"
         @restart()
         console.log "movie " + movie.title + " isn't up to snuff because it isn't in english"
+      else if @isNotReleased(movie.release_date)
+        @restart()
+        console.log "movie " + movie.title + " isn't up to snuff because it hasn't come out yet"
       else if @isTooOld(movie.release_date)
         @restart
         console.log "movie " + movie.title + " isn't up to snuff because it came out before 1975"
