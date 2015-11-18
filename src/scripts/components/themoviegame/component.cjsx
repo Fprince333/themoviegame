@@ -229,7 +229,7 @@ module.exports = React.createClass
       showSaveModal: false
     }
 
-  componentDidMount: ->
+  componentWillMount: ->
     console.log "mounted"
     prom = Api.getRandomMovie(@state.totalMoviePages)
     prom.always =>
@@ -256,12 +256,38 @@ module.exports = React.createClass
         @restart()
         console.log "movie " + movie.title + " isn't up to snuff because it came out before 1975"
       else
+        console.log "movie passed the Checker tests"
         updatedUsedMovieList = @state.usedMovies.concat([movie])
         @setState(
           movie: movie,
           usedMovies: updatedUsedMovieList
           isLoading: false,
           totalMoviePages: totalPages
+        )
+
+  componentWillUpdate: (prevProps, prevState) ->
+    console.log "Component will update"
+    if prevState.movie isnt @state.movie and not _.isEmpty(prevState.movie) and @state.score > 0
+      if Checker.isNotReleased(@state.movie.release_date)
+        @continue()
+        console.log "movie " + @state.movie.title + " isn't up to snuff because it hasn't come out yet"
+      else if Checker.isTooObscure(@state.movie.popularity)
+        @continue()
+        console.log "movie " + @state.movie.title + " isn't up to snuff because of popularity"
+      else if Checker.isNotAllowed(@state.movie.genre_ids)
+        @continue()
+        console.log "movie " + @state.movie.title + " isn't up to snuff because it's a weird category"
+      else if @state.movie.original_language isnt "en"
+        @continue()
+        console.log "movie " + @state.movie.title + " isn't up to snuff because it isn't in english"
+      else if Checker.isTooOld(@state.movie.release_date)
+        @continue()
+        console.log "movie " +  @state.movie.title + " isn't up to snuff because it came out before 1975"
+      else
+        console.log "movie passed the Checker tests"
+        @setState(
+          isLoading: false,
+          isGuessable: true
         )
 
   componentDidUpdate: (prevProps, prevState) ->
@@ -283,6 +309,7 @@ module.exports = React.createClass
         @continue()
         console.log "movie " +  @state.movie.title + " isn't up to snuff because it came out before 1975"
       else
+        console.log "movie passed the Checker tests"
         @setState(
           isLoading: false,
           isGuessable: true
