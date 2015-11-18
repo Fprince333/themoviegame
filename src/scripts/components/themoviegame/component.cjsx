@@ -107,6 +107,9 @@ module.exports = React.createClass
   isNotReleased: (date) ->
     if moment(date).isBefore(@state.today, 'day') then false else true
 
+  isTooOld: (date) ->
+    if moment(date).isBefore( moment().year(1975) , 'year') then true else false
+
   movieHasBeenUsed: (mov) ->
     used = false
     @state.usedMovies.forEach (el) ->
@@ -253,6 +256,9 @@ module.exports = React.createClass
       else if movie.original_language isnt "en"
         @restart()
         console.log "movie " + movie.title + " isn't up to snuff because it isn't in english"
+      else if @isTooOld(movie.release_date)
+        @restart
+        console.log "movie " + movie.title + " isn't up to snuff because it came out before 1975"
       else
         updatedUsedMovieList = @state.usedMovies.concat([movie])
         @setState(
