@@ -1,5 +1,6 @@
 Link = require('react-router').Link
 Api = require "./services/api"
+Loader = require "./components/loader/component"
 LeaderboardTable = require './components/leaderboard/component'
 
 module.exports = React.createClass
@@ -9,7 +10,8 @@ module.exports = React.createClass
     members: [],
     totalMembers: null,
     totalPages: null,
-    currentPage: null
+    currentPage: null,
+    isLoading: true
 
   componentDidMount: ->
     window.scroll(0,0)
@@ -26,9 +28,13 @@ module.exports = React.createClass
         members: leaders,
         totalMembers: allLeaders,
         totalPages: allPages,
-        currentPage: 1
+        currentPage: 1,
+        isLoading: false
       )
 
   render: ->
-    <LeaderboardTable users={@state.members} />
+    if @state.isLoading
+      <Loader />
+    else
+      <LeaderboardTable users={@state.members} />
 
