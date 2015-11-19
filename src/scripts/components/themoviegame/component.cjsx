@@ -28,13 +28,10 @@ module.exports = React.createClass
   displayName: 'TheMovieGame'
 
   giveUp: ->
-    if @state.score > 5
-      @setState(
-        showSaveModal: true
-        isLoading: false
-      )
-    else
-      @restart()
+    @setState(
+      showSaveModal: true
+      isLoading: false
+    )
 
   restart: ->
     @setState(isLoading: true)
@@ -170,14 +167,10 @@ module.exports = React.createClass
         console.log "Correct, " + @state.answer + " was in " + @state.movie.title
         @getActorInfo(@state.currentActorId)
       else
-        console.log "Incorrect, " + @state.answer + " was not in " + @state.movie.title
-        if @state.score > 5
-          @setState(
-            showSaveModal: true,
-            isLoading: false
-          )
-        else
-          @restart()
+        @setState(
+          showSaveModal: true,
+          isLoading: false
+        )
 
   checkAnswer: (arr, answer) ->
     console.log "Checking answer..."
@@ -313,7 +306,7 @@ module.exports = React.createClass
       <Loader />
     else if @state.showSaveModal
       <div className="movie-game-container">
-        <Summary score={@state.score} visibility={@toggleModal} actors={@state.usedActors} movies={@state.usedMovies} />
+        <Summary score={@state.score} visibility={@toggleModal} answer={@state.answer} movie={@state.movie} />
       </div>
     else
       if @state.score > 0

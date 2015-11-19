@@ -6,11 +6,9 @@ Api = require("../../services/api")
 Card = require 'material-ui/lib/card/card'
 CardTitle = require 'material-ui/lib/card/card-title'
 CardActions = require 'material-ui/lib/card/card-actions'
+CardText = require 'material-ui/lib/card/card-text'
 FlatButton = require 'material-ui/lib/flat-button'
 TextField = require 'material-ui/lib/text-field'
-List = require 'material-ui/lib/lists/list'
-ListItem = require 'material-ui/lib/lists/list-item'
-ListDivider = require 'material-ui/lib/lists/list-divider'
 
 module.exports = React.createClass
   displayName: 'Summary',
@@ -24,6 +22,12 @@ module.exports = React.createClass
   handleSkip: ->
     @props.visibility(false)
 
+  showForm: ->
+    if @props.score > 5 then false else true
+
+  showButton: ->
+    if @props.score > 5 then true else false
+
   handleSubmit: (e) ->
     e.preventDefault()
     prom = Api.savePlayerScore(@formData)
@@ -35,30 +39,9 @@ module.exports = React.createClass
       console.log res.status
       @props.visibility(false)
   render: ->
-    leftStyles = {
-      float: "left",
-      width: "45%",
-      margin: "10px auto"
-    }
-    rightStyles = {
-      float: "right",
-      width: "45%",
-      margin: "10px auto"
-    }
-    movieList = _.map @props.movies, (movie) ->
-      <ListItem key={movie.id} primaryText={movie.title}/>
-    actorList = _.map @props.actors, (actor) ->
-      <ListItem key={actor.id} primaryText={actor.name}/>
     <Card>
-      <CardTitle title="Nice Round!" subtitle={"Score: " + @props.score}/>
-      <List subheader="Used Movies" style={leftStyles}>
-        {movieList}
-      </List>
-      <ListDivider inset={true} />
-      <List subheader="Used Actors" style={rightStyles}>
-        {actorList}
-      </List>
-      <CardActions className="clear">
+      <CardTitle title="Nice Round" subtitle={"Score: " + @props.score}/>
+      <CardActions className={if @showForm() then 'hidden' else ''}>
         <form onChange={@.updateFormData} onSubmit={@handleSubmit}>
           <TextField required={true} hintText="Enter Name" name='entry[name]' underlineFocusStyle={{borderColor: "#f44355"}} hintStyle={{color: '#f44355'}}/>
           <br/>
@@ -68,5 +51,8 @@ module.exports = React.createClass
             <input className="hidden-input" type="submit" />
           </FlatButton>
         </form>
+      </CardActions>
+      <CardActions className={if @showButton() then 'hidden' else ''}>
+        <FlatButton primary={true} onClick={@handleSkip} label="Play Again"/>
       </CardActions>
     </Card>
