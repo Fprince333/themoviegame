@@ -151,6 +151,7 @@ module.exports = React.createClass
   handleAnswer: (e) ->
     e.preventDefault() if e
     guess = e.target.value || e.target.innerText
+    guess.replace("↵", "")
     console.log guess
     @setState(
       isGuessable: false ,
