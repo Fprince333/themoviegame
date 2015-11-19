@@ -271,6 +271,9 @@ module.exports = React.createClass
   shouldComponentUpdate: (newProps, newState) ->
     console.log newState
     if newState.movie isnt @state.movie and not _.isEmpty(newState.movie) and @state.score > 0
+      genres = []
+      newState.movie.genres.forEach (el) ->
+        genres.push(el.id)
       if Checker.isNotReleased(newState.movie.release_date)
         console.log "movie " + newState.movie.title + " isn't up to snuff because it hasn't come out yet"
         @continue()
@@ -279,7 +282,7 @@ module.exports = React.createClass
         console.log "movie " + newState.movie.title + " isn't up to snuff because of popularity"
         @continue()
         return false
-      else if Checker.isNotAllowed(newState.movie.genre_ids)
+      else if Checker.isNotAllowed(genres)
         console.log "movie " + newState.movie.title + " isn't up to snuff because it's a weird category"
         @continue()
         return false
