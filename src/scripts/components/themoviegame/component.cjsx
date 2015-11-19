@@ -1,5 +1,5 @@
 require("./style.scss")
-LeaderboardForm = require '../../components/leaderboard_form/component'
+Summary = require '../../components/summary/component'
 MovieList = require '../../components/movie_list/component'
 ActorList = require '../../components/actor_list/component'
 Question = require '../../components/question/component'
@@ -29,7 +29,10 @@ module.exports = React.createClass
 
   giveUp: ->
     if @state.score > 5
-      @setState(showSaveModal: true)
+      @setState(
+        showSaveModal: true
+        isLoading: false
+      )
     else
       @restart()
 
@@ -168,8 +171,12 @@ module.exports = React.createClass
       else
         console.log "Incorrect, " + @state.answer + " was not in " + @state.movie.title
         if @state.score > 5
-          @setState(showSaveModal: true)
-        @restart()
+          @setState(
+            showSaveModal: true,
+            isLoading: false
+          )
+        else
+          @restart()
 
   checkAnswer: (arr, answer) ->
     console.log "Checking answer..."
@@ -305,7 +312,7 @@ module.exports = React.createClass
       <Loader />
     else if @state.showSaveModal
       <div className="movie-game-container">
-        <LeaderboardForm score={@state.score} visibility={@toggleModal}/>
+        <Summary score={@state.score} visibility={@toggleModal} actors={@state.usedActors} movies={@state.usedMovies} />
       </div>
     else
       if @state.score > 0
