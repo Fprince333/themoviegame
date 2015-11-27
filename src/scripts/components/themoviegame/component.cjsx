@@ -147,14 +147,15 @@ module.exports = React.createClass
 
   handleAnswer: (e) ->
     e.preventDefault() if e
-    guess = e.target.value || e.target.innerText
-    guess.replace("↵", "")
-    console.log guess
+    dirtyGuess = e.target.value || e.target.innerText
+    guessWithoutSpecialCharacter = dirtyGuess.replace("↵", "")
+    cleanGuess = guessWithoutSpecialCharacter.trim()
+    console.log cleanGuess
     @setState(
       isGuessable: false ,
       showAutoComplete: false,
       isLoading: true,
-      answer: guess
+      answer: cleanGuess
     )
     prom = Api.getMovieCredits(@state.movie.id.toString())
     prom.always =>
