@@ -235,39 +235,7 @@ module.exports = React.createClass
 
   componentWillMount: ->
     console.log "mounted"
-    prom = Api.getRandomMovie(@state.totalMoviePages)
-    prom.always =>
-      console.log("done")
-      @setState(isLoading: false)
-    prom.fail (err) ->
-      console.log("handle error " + err)
-    prom.then (res) =>
-      totalPages = if res.total_pages > 1000 then Math.floor(Math.random()*1000) else res.total_pages
-      movie = res.results[Math.floor(Math.random()*res.results.length)]
-      if Checker.isNotAllowed(movie.genre_ids)
-        @restart()
-        console.log "movie " + movie.title + " isn't up to snuff because it's a weird category"
-      else if movie.original_language isnt "en"
-        @restart()
-        console.log "movie " + movie.title + " isn't up to snuff because it isn't in english"
-      else if Checker.isTooObscure(movie.popularity)
-        @restart()
-        console.log "movie " + @state.movie.title + " isn't up to snuff because of popularity"
-      else if Checker.isNotReleased(movie.release_date)
-        @restart()
-        console.log "movie " + movie.title + " isn't up to snuff because it hasn't come out yet"
-      else if Checker.isTooOld(movie.release_date)
-        @restart()
-        console.log "movie " + movie.title + " isn't up to snuff because it came out before 1975"
-      else
-        console.log "movie passed the Checker tests"
-        updatedUsedMovieList = @state.usedMovies.concat([movie])
-        @setState(
-          movie: movie,
-          usedMovies: updatedUsedMovieList
-          isLoading: false,
-          totalMoviePages: totalPages
-        )
+    @restart()
 
   shouldComponentUpdate: (newProps, newState) ->
     console.log newState
