@@ -10,8 +10,10 @@ module.exports = React.createClass
   displayName: "Header"
   render: ->
     <div>
-      <AppBar style={backgroundColor: "#f44355"}
-        iconElementLeft={<Link to="play"><IconButton><Play/></IconButton></Link>}
-        iconElementRight={<Link to="leaderboard"><IconButton><Menu/></IconButton></Link>} />
+      <div className="movie-game-container" style={paddingBottom: "0px"}>
+        <AppBar style={backgroundColor: "#f44355"}
+          iconElementLeft={<Link to="play"><IconButton><Play/></IconButton></Link>}
+          iconElementRight={<Link to="leaderboard"><IconButton><Menu/></IconButton></Link>} />
+      </div>
       <RouteHandler/>
     </div>
