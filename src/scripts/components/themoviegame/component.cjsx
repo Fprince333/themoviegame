@@ -47,6 +47,9 @@ module.exports = React.createClass
       if Checker.isNotReleased(movie.release_date)
         console.log "Movie " + movie.title + " isn't up to snuff because it hasn't come out yet"
         @restart()
+      else if Checker.isTooOld(movie.release_date)
+        console.log "movie " +  movie.title + " isn't up to snuff because it came out before 1975"
+        @restart()
       else if Checker.isTooObscure(movie.popularity)
         console.log "Movie " + movie.title + " isn't up to snuff because of popularity"
         @restart()
