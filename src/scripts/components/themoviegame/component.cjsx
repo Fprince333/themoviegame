@@ -8,6 +8,7 @@ AutoCompleteList = require '../../components/autocomplete/component'
 Api = require "../../services/api"
 Checker = require "../../services/checker"
 Loader = require "../../components/loader/component"
+Snackbar = require 'material-ui/lib/snackbar'
 
 _ = require 'underscore'
 
@@ -17,7 +18,6 @@ CardHeader = require 'material-ui/lib/card/card-header'
 Avatar = require 'material-ui/lib/avatar'
 CardActions = require 'material-ui/lib/card/card-actions'
 FlatButton = require 'material-ui/lib/flat-button'
-
 Colors = require 'material-ui/lib/styles/colors'
 
 
@@ -31,6 +31,7 @@ module.exports = React.createClass
     @setState(
       showSaveModal: true
       isLoading: false
+      gameOverMessage: "Get 'em next time."
     )
 
   restart: ->
@@ -163,7 +164,8 @@ module.exports = React.createClass
       else
         @setState(
           showSaveModal: true,
-          isLoading: false
+          isLoading: false,
+          gameOverMessage: @state.answer + " wasn't in " + @state.movie.title
         )
 
   checkAnswer: (arr, answer) ->
@@ -187,7 +189,11 @@ module.exports = React.createClass
 
   updateActorState: (actor) ->
     if @actorHasBeenUsed(@state.currentActorId)
-      @restart()
+      @setState(
+        showSaveModal: true,
+        isLoading: false,
+        gameOverMessage: @state.answer + " has already been used."
+      )
       return
     updatedUsedActorList = @state.usedActors.concat([actor])
     @setState({
@@ -222,7 +228,8 @@ module.exports = React.createClass
       disallowedCategories: [10770, 99, 10769, 16, 10751],
       totalMoviePages: 1,
       isGuessable: true,
-      showSaveModal: false
+      showSaveModal: false,
+      gameOverMessage: ""
     }
 
   componentWillMount: ->
@@ -263,6 +270,9 @@ module.exports = React.createClass
     else if @state.showSaveModal
       <div className="movie-game-container">
         <Summary score={@state.score} visibility={@toggleModal} answer={@state.answer} movie={@state.movie} />
+        <Snackbar
+          message={@state.gameOverMessage}
+          openOnMount={@state.showSaveModal} />
       </div>
     else
       if @state.score > 0
