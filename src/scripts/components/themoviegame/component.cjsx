@@ -55,6 +55,8 @@ module.exports = React.createClass
         @restart()
       else if movie.original_language isnt "en"
         @restart()
+      else if Checker.hasNoPoster(movie)
+        @restart()
       else if movie is @state.movie
         @restart()
       else
@@ -255,6 +257,9 @@ module.exports = React.createClass
       else if Checker.isTooOld(newState.movie.release_date)
         @continue()
         return false
+      else if Checker.hasNoPoster(newState.movie)
+        @continue()
+        return false
       else
         @setState(
           isLoading: false,
@@ -285,7 +290,7 @@ module.exports = React.createClass
             textStyle={{verticalAlign: "super"}}
             title="Score"
             avatar={<Avatar>{@state.score}</Avatar>}/>
-          <Question hasPoster={@state.movie.backdrop_path} movie={@state.movie}/>
+          <Question movie={@state.movie}/>
           <Answer isGuessable={@state.isGuessable} onChange={@handleAnswerChange} onEnterKeyDown={@handleAnswer}/>
           <AutoCompleteList actors={@state.suggestedActors} visible={@state.showAutoComplete} onClick={@handleAnswer}/>
           <CardActions style={textAlign: "right"} >

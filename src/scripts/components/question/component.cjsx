@@ -5,9 +5,7 @@ _ = require 'underscore'
 
 module.exports = React.createClass
   render: ->
-    if @props.hasPoster
+    if not _.isEmpty(@props.movie)
       <CardMedia overlay={<CardTitle title="Name an actor or actress in" subtitle={@props.movie.title + " - " + @props.movie.release_date.substring(0, 4) }/>}><img className="poster-image" src={"http://image.tmdb.org/t/p/w780" + @props.movie.backdrop_path}/></CardMedia>
-    else if not _.isEmpty(@props.movie)
-      <CardTitle title="Name an actor or actress in" subtitle={@props.movie.title + " - " + @props.movie.release_date.substring(0, 4)}/>
     else
-      <CardTitle title="Name an actor or actress in" subtitle={@props.movie.title} />
+      <div></div>

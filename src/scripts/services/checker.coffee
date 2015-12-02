@@ -8,3 +8,4 @@ module.exports =
   isNotReleased: (date) -> if moment(date).isBefore(moment(), 'day') then false else true
   isTooOld: (date) -> if moment(date).isBefore( moment().year(1975) , 'year') then true else false
   isNotAllowed: (idArray) -> if _.intersection(disallowedCategories, idArray).length > 0 then return true else return false
+  hasNoPoster: (movie) -> if movie.backdrop_path then false else true
