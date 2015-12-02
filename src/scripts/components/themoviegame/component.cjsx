@@ -145,7 +145,6 @@ module.exports = React.createClass
     dirtyGuess = e.target.value || e.target.innerText
     guessWithoutSpecialCharacter = dirtyGuess.replace("↵", "")
     cleanGuess = guessWithoutSpecialCharacter.trim()
-    console.log cleanGuess
     @setState(
       isGuessable: false ,
       showAutoComplete: false,
@@ -160,7 +159,6 @@ module.exports = React.createClass
     prom.then (res) =>
       isCorrect = @checkAnswer(res.cast, @state.answer)
       if isCorrect
-        console.log "Correct, " + @state.answer + " was in " + @state.movie.title
         @getActorInfo(@state.currentActorId)
       else
         @setState(
@@ -231,7 +229,6 @@ module.exports = React.createClass
     @restart()
 
   shouldComponentUpdate: (newProps, newState) ->
-    console.log newState
     if newState.movie isnt @state.movie and not _.isEmpty(newState.movie) and @state.score > 0
       genres = []
       newState.movie.genres.forEach (el) ->
