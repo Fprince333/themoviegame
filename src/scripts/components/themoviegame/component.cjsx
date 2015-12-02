@@ -45,22 +45,16 @@ module.exports = React.createClass
       totalPages = if res.total_pages > 1000 then Math.floor(Math.random()*1000) else res.total_pages
       movie = res.results[Math.floor(Math.random()*res.results.length)]
       if Checker.isNotReleased(movie.release_date)
-        console.log "Movie " + movie.title + " isn't up to snuff because it hasn't come out yet"
         @restart()
       else if Checker.isTooOld(movie.release_date)
-        console.log "movie " +  movie.title + " isn't up to snuff because it came out before 1975"
         @restart()
       else if Checker.isTooObscure(movie.popularity)
-        console.log "Movie " + movie.title + " isn't up to snuff because of popularity"
         @restart()
       else if Checker.isNotAllowed(movie.genre_ids)
-        console.log "Movie " + movie.title + " isn't up to snuff because its category isn't allowed"
         @restart()
       else if movie.original_language isnt "en"
-        console.log "Movie " + movie.title + " isn't up to snuff because it's language isn't english"
         @restart()
       else if movie is @state.movie
-        console.log "Movie " + movie.title + " isn't up to snuff because it was just used"
         @restart()
       else
         if @state.score > 0
@@ -78,7 +72,6 @@ module.exports = React.createClass
         )
 
   continue: ->
-    console.log "continuing..."
     @setState(isLoading: true)
     prom = Api.getNextMovie(@state.currentActorId)
     prom.always =>
@@ -92,7 +85,6 @@ module.exports = React.createClass
       @updateMovieInfo(res.cast[movieIndex].id)
 
   updateMovieInfo: (movieId) ->
-    console.log "updating movie info..."
     prom = Api.getMovieInfo(movieId)
     prom.always =>
       console.log "done"
@@ -177,7 +169,6 @@ module.exports = React.createClass
         )
 
   checkAnswer: (arr, answer) ->
-    console.log "Checking answer..."
     correct = false
     actorId = null
     arr.forEach (el) ->
@@ -237,7 +228,6 @@ module.exports = React.createClass
     }
 
   componentWillMount: ->
-    console.log "mounted"
     @restart()
 
   shouldComponentUpdate: (newProps, newState) ->
@@ -247,27 +237,21 @@ module.exports = React.createClass
       newState.movie.genres.forEach (el) ->
         genres.push(el.id)
       if Checker.isNotReleased(newState.movie.release_date)
-        console.log "movie " + newState.movie.title + " isn't up to snuff because it hasn't come out yet"
         @continue()
         return false
       else if Checker.isTooObscure(newState.movie.popularity)
-        console.log "movie " + newState.movie.title + " isn't up to snuff because of popularity"
         @continue()
         return false
       else if Checker.isNotAllowed(genres)
-        console.log "movie " + newState.movie.title + " isn't up to snuff because it's a weird category"
         @continue()
         return false
       else if newState.movie.original_language isnt "en"
-        console.log "movie " + newState.movie.title + " isn't up to snuff because it isn't in english"
         @continue()
         return false
       else if Checker.isTooOld(newState.movie.release_date)
-        console.log "movie " +  newState.movie.title + " isn't up to snuff because it came out before 1975"
         @continue()
         return false
       else
-        console.log "movie passed the Checker tests"
         @setState(
           isLoading: false,
           isGuessable: true
