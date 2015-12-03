@@ -5,15 +5,14 @@
           min-height: 169px;
         }
   @media only screen and (min-width : 375px),
-         only screen and (max-width : 667px),
-         only screen and (orientation : portrait) {
+         only screen and (max-width : 667px) {
           min-height: 200px;
         }
   @media only screen and (min-width : 414px),
          only screen and (max-width : 736px) {
           min-height: 222px;
         }
-  @media only screen and (min-height: 800px) and (min-width: 1200px) {
+  @media only screen and (min-height: 900px) and (min-width: 1200px) {
           min-height: 576px;
         }
 }
