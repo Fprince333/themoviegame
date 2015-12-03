@@ -30,16 +30,13 @@ module.exports = React.createClass
   giveUp: ->
     @setState(
       showSaveModal: true
-      isLoading: false
       gameOverMessage: "Get 'em next time."
     )
 
   restart: ->
-    @setState(isLoading: true)
     prom = if @state.totalMoviePages > 1 then Api.getRandomMovie(Math.floor(Math.random()*@state.totalMoviePages)) else Api.getRandomMovie(@state.totalMoviePages)
     prom.always =>
       console.log "done"
-      @setState( isLoading: false )
     prom.fail (err) ->
       console.log "handle error" + err
     prom.then (res) =>
@@ -68,14 +65,12 @@ module.exports = React.createClass
         @setState(
           score: 0,
           movie: movie,
-          isLoading: false,
           usedMovies: updatedUsedMovieList,
           isGuessable: true,
           totalMoviePages: totalPages
         )
 
   continue: ->
-    @setState(isLoading: true)
     prom = Api.getNextMovie(@state.currentActorId)
     prom.always =>
       console.log "done"
@@ -151,7 +146,6 @@ module.exports = React.createClass
     @setState(
       isGuessable: false ,
       showAutoComplete: false,
-      isLoading: true,
       answer: cleanGuess
     )
     prom = Api.getMovieCredits(@state.movie.id.toString())
@@ -166,7 +160,6 @@ module.exports = React.createClass
       else
         @setState(
           showSaveModal: true,
-          isLoading: false,
           gameOverMessage: @state.answer + " wasn't in " + @state.movie.title
         )
 
@@ -193,7 +186,6 @@ module.exports = React.createClass
     if @actorHasBeenUsed(@state.currentActorId)
       @setState(
         showSaveModal: true,
-        isLoading: false,
         gameOverMessage: @state.answer + " has already been used."
       )
       return
@@ -217,7 +209,6 @@ module.exports = React.createClass
 
   getInitialState: ->
     {
-      isLoading: true,
       score: 0,
       answer: null,
       movie: {},
@@ -261,18 +252,13 @@ module.exports = React.createClass
         @continue()
         return false
       else
-        @setState(
-          isLoading: false,
-          isGuessable: true
-        )
+        @setState( isGuessable: true )
         return true
     else
       return true
 
   render: ->
-    if @state.isLoading
-      <Loader />
-    else if @state.showSaveModal
+    if @state.showSaveModal
       <div className="movie-game-container">
         <Summary score={@state.score} visibility={@toggleModal} answer={@state.answer} movie={@state.movie} />
         <Snackbar
