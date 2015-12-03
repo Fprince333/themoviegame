@@ -1,13 +1,12 @@
 Link = require('react-router').Link
 RouteHandler = require('react-router').RouteHandler
-Header = require('./components/header/component')
 AppBar = require 'material-ui/lib/app-bar'
 IconButton = require 'material-ui/lib/icon-button'
 Menu = require 'material-ui/lib/svg-icons/navigation/menu'
 Play = require 'material-ui/lib/svg-icons/av/play-arrow'
 
 module.exports = React.createClass
-  displayName: "Header"
+  displayName: "App"
   render: ->
     <div>
       <div className="movie-game-container" style={paddingBottom: "0px"}>
