@@ -38,7 +38,7 @@ module.exports = React.createClass
     prom.always =>
       console.log "done"
     prom.fail (err) ->
-      console.log "handle error" + err
+      console.log "handle " + err.status + " " + err.statusText
     prom.then (res) =>
       totalPages = if res.total_pages > 1000 then Math.floor(Math.random()*1000) else res.total_pages
       movie = res.results[Math.floor(Math.random()*res.results.length)]
@@ -75,7 +75,7 @@ module.exports = React.createClass
     prom.always =>
       console.log "done"
     prom.fail (err) ->
-      console.log "handle error" + err
+      console.log "handle " + err.status + " " + err.statusText
     prom.then (res) =>
       movieIndex = Math.floor(Math.random()*res.cast.length)
       while @movieHasBeenUsed(res.cast[movieIndex])
@@ -87,7 +87,7 @@ module.exports = React.createClass
     prom.always =>
       console.log "done"
     prom.fail (err) ->
-      console.log "handle error" + err
+      console.log "handle " + err.status + " " + err.statusText
     prom.then (res) =>
       updatedUsedMovieList = @state.usedMovies.concat([res])
       @setState(
@@ -117,7 +117,7 @@ module.exports = React.createClass
     prom.always =>
       console.log "done"
     prom.fail (err) ->
-      console.log "handle error" + err
+      console.log "handle " + err.status + " " + err.statusText
     prom.then (res) =>
       if res.results.length > 0
         @appendResults(res.results)
@@ -178,7 +178,7 @@ module.exports = React.createClass
     prom.always =>
       console.log "done"
     prom.fail (err) ->
-      console.log "handle error" + err
+      console.log "handle " + err.status + " " + err.statusText
     prom.then (res) =>
       @updateActorState(res)
 
