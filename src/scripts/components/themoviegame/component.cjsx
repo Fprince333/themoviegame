@@ -9,7 +9,7 @@ Api = require "../../services/api"
 Checker = require "../../services/checker"
 Loader = require "../../components/loader/component"
 Snackbar = require 'material-ui/lib/snackbar'
-
+Dialog = require 'material-ui/lib/dialog'
 _ = require 'underscore'
 
 
@@ -222,7 +222,8 @@ module.exports = React.createClass
       totalMoviePages: 1,
       isGuessable: true,
       showSaveModal: false,
-      gameOverMessage: ""
+      gameOverMessage: "",
+      showRules: true
     }
 
   componentWillMount: ->
@@ -257,7 +258,19 @@ module.exports = React.createClass
     else
       return true
 
+  _onDialogSubmit: ->
+    window.localStorage.setItem("hasReadRules", true);
+    @setState( showRules: false )
+
   render: ->
+    standardActions = [ { text: 'OK', onTouchTap: @_onDialogSubmit } ]
+    rules = <div>
+              <p>You name an actor or actress from the movie on the screen. </p>
+              <p>If you're right, you have to name another actor or actress in the next movie.</p>
+              <p> Be careful - you can only use an actor once.</p>
+              <p> Get the highest possible score and try to beat the leaders.</p>
+              <p>Good Luck.</p>
+            </div>
     if @state.showSaveModal
       <div className="movie-game-container">
         <Summary score={@state.score} visibility={@toggleModal} answer={@state.answer} movie={@state.movie} />
@@ -270,17 +283,24 @@ module.exports = React.createClass
         button = <FlatButton label="Give Up" primary={true} onClick={@giveUp}/>
       else
         button = <FlatButton label="Start Over" secondary={true} onClick={@restart}/>
-      <div className="movie-game-container">
-        <Card initiallyExpanded={true}>
-          <CardHeader
-            textStyle={{verticalAlign: "super"}}
-            title="Score"
-            avatar={<Avatar>{@state.score}</Avatar>}/>
-          <Question movie={@state.movie}/>
-          <Answer isGuessable={@state.isGuessable} onChange={@handleAnswerChange} onEnterKeyDown={@handleAnswer}/>
-          <AutoCompleteList actors={@state.suggestedActors} visible={@state.showAutoComplete} onClick={@handleAnswer}/>
-          <CardActions style={textAlign: "right"} >
-            {button}
-          </CardActions>
-        </Card>
+      if window.localStorage.getItem("hasReadRules") isnt "true" and @state.showRules
+        dialog = <Dialog autoScrollBodyContent={true} openImmediately={true} title="Welcome to The Movie Game" actions={standardActions} open={@state.showDialogStandardActions}>{rules}</Dialog>
+      else
+        dialog = null
+      <div>
+        <div className="movie-game-container">
+          <Card initiallyExpanded={true}>
+            <CardHeader
+              textStyle={{verticalAlign: "super"}}
+              title="Score"
+              avatar={<Avatar>{@state.score}</Avatar>}/>
+            <Question movie={@state.movie}/>
+            <Answer isGuessable={@state.isGuessable} onChange={@handleAnswerChange} onEnterKeyDown={@handleAnswer}/>
+            <AutoCompleteList actors={@state.suggestedActors} visible={@state.showAutoComplete} onClick={@handleAnswer}/>
+            <CardActions style={textAlign: "right"} >
+              {button}
+            </CardActions>
+          </Card>
+        </div>
+        {dialog}
       </div>
