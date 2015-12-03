@@ -527,7 +527,7 @@ body {
   padding: 10px; }
   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     .movie-game-container {
-      max-width: 800px; } }
+      max-width: 700px; } }
   @media only screen and (min-height: 900px) and (min-width: 1200px) {
     .movie-game-container {
       max-width: 1024px; } }
