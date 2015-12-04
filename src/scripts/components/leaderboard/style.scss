@@ -1,8 +1,17 @@
+.mui-header-table { position: absolute; }
+.mui-header-table,
 .mui-table-wrapper {
+  max-width: 512px;
+  max-height: 480px;
   margin: 0 auto;
-  max-height: 748px;
+  @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+    max-width: 700px;
+    max-height: 566px;
+  }
+  @media only screen and (min-height: 900px) and (min-width: 1200px) {
+    max-width: 1024px;
+    max-height: 768px;
+  }
 }
 
-.mui-header-table .mui-table-header-row :first-of-type {
-  width: 0px !important;
-}
+.mui-header-table .mui-table-header-row :first-of-type { width: 0px !important; }
