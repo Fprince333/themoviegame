@@ -28,22 +28,32 @@ module.exports = React.createClass
   showButton: ->
     if @props.score > 5 then true else false
 
+  formIsValid: (e) ->
+    entry = e.target.getElementsByClassName("entry-name")[0]
+    input = entry.getElementsByTagName("input")[0].value
+    value = input.replace /^\s+|\s+$/g, ""
+    if !!value
+      return true
+    else
+      return false
+
   handleSubmit: (e) ->
     e.preventDefault()
-    prom = Api.savePlayerScore(@formData)
-    prom.always =>
-      console.log "done"
-    prom.fail (err) ->
-      console.log("handle error " + err)
-    prom.then (res) =>
-      console.log res.status
-      @props.visibility(false)
+    if @formIsValid(e)
+      prom = Api.savePlayerScore(@formData)
+      prom.always =>
+        console.log "done"
+      prom.fail (err) ->
+        console.log("handle error " + err)
+      prom.then (res) =>
+        console.log res.status
+        @props.visibility(false)
   render: ->
     <Card>
       <CardTitle title="Nice Round" subtitle={"Score: " + @props.score}/>
       <CardActions className={if @showForm() then 'hidden' else ''}>
         <form onChange={@.updateFormData} onSubmit={@handleSubmit}>
-          <TextField required={true} hintText="Enter Name" name='entry[name]' underlineFocusStyle={{borderColor: "#f44355"}} hintStyle={{color: '#f44355'}}/>
+          <TextField className="entry-name" required={true} hintText="Enter Name" name='entry[name]' underlineFocusStyle={{borderColor: "#f44355"}} hintStyle={{color: '#f44355'}}/>
           <br/>
           <FlatButton primary={true} onClick={@handleSkip} label="Skip">
           </FlatButton>
