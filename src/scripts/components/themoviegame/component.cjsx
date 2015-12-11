@@ -77,7 +77,7 @@ module.exports = React.createClass
     prom.fail (err) ->
       console.log "handle " + err.status + " " + err.statusText
     prom.then (res) =>
-      movieIndex = Math.floor(Math.random()*res.cast.length)
+      movieIndex = Math.floor(Math.random()*(res.cast.length - 1))
       while @movieHasBeenUsed(res.cast[movieIndex])
         movieIndex++
       @updateMovieInfo(res.cast[movieIndex].id)
