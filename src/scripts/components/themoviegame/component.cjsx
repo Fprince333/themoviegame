@@ -34,7 +34,7 @@ module.exports = React.createClass
     )
 
   restart: ->
-    prom = if @state.totalMoviePages > 1 then Api.getRandomMovie(Math.floor(Math.random()*@state.totalMoviePages)) else Api.getRandomMovie(@state.totalMoviePages)
+    prom = if @state.totalMoviePages > 1 then Api.getRandomMovie(Math.floor(Math.random()*@state.totalMoviePages)) else Api.getRandomMovie(Math.floor(Math.random()*50) + 1)
     prom.always =>
       console.log "done"
     prom.fail (err) ->
