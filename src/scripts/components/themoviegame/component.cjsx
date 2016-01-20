@@ -80,6 +80,8 @@ module.exports = React.createClass
       movieIndex = Math.floor(Math.random()*(res.cast.length - 1))
       while @movieHasBeenUsed(res.cast[movieIndex])
         movieIndex++
+      while res.cast.length < 5
+        movieIndex++
       @updateMovieInfo(res.cast[movieIndex].id)
 
   updateMovieInfo: (movieId) ->
