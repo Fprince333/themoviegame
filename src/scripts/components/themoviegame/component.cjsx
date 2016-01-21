@@ -82,9 +82,9 @@ module.exports = React.createClass
         movieIndex++
       while res.cast.length < 5
         movieIndex++
-      @updateMovieInfo(res.cast[movieIndex].id)
+      @updateMovieandCast(res.cast[movieIndex].id)
 
-  updateMovieInfo: (movieId) ->
+  updateMovieandCast: (movieId) ->
     prom = Api.getMovieInfo(movieId)
     prom.always =>
       console.log "done"
@@ -96,6 +96,13 @@ module.exports = React.createClass
         movie: res,
         usedMovies: updatedUsedMovieList
       )
+    prom = Api.getMovieCredits(movieId.toString())
+    prom.always =>
+      console.log("done")
+    prom.fail (err) ->
+      console.log("handle error " + err)
+    prom.then (res) =>
+      @setState(cast: res.cast)
 
   movieHasBeenUsed: (mov) ->
     used = false
@@ -158,7 +165,6 @@ module.exports = React.createClass
     prom.then (res) =>
       isCorrect = @checkAnswer(res.cast, @state.answer)
       if isCorrect
-        @setState(cast: res.cast)
         @getActorInfo(@state.currentActorId)
       else
         @setState(
