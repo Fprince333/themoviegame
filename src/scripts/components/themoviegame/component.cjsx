@@ -279,7 +279,7 @@ module.exports = React.createClass
             </div>
     if @state.showSaveModal
       <div className="movie-game-container">
-        <Summary score={@state.score} visibility={@toggleModal} answer={@state.answer} movie={@state.movie} cast={@state.cast} />
+        <Summary score={@state.score} visibility={@toggleModal} answer={@state.answer} movie={@state.movie} cast={@state.cast} actor={@state.actor}/>
         <Snackbar
           message={@state.gameOverMessage}
           openOnMount={@state.showSaveModal} />

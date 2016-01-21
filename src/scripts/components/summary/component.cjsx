@@ -53,9 +53,11 @@ module.exports = React.createClass
         @props.visibility(false)
   render: ->
     tilesData = []
+    currentActor = @props.actor
     @props.cast.forEach (actor) ->
-      if actor.profile_path
-        tilesData.push({ img: actor.profile_path, name: actor.name, character: actor.character })
+      if actor.name isnt currentActor.name
+        if actor.profile_path
+          tilesData.push({ img: actor.profile_path, name: actor.name, character: actor.character })
     gradientBg = 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)'
     tileElements = _.map tilesData, (tile) ->
       <GridTile key={tile.img} actionPosition="left" titlePosition="top" titleBackground={gradientBg} title={<span className={'profile-title'}>{tile.name}</span>} subtitle={<span className={'profile-subtitle'} >playing {tile.character}</span>}><img className={'profile-image'} src={"http://image.tmdb.org/t/p/w185" + tile.img} /></GridTile>
