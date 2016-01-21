@@ -18,7 +18,7 @@ module.exports = React.createClass
         <TableRowColumn style={{textAlign: 'center'}} key={user.member}>{user.member}</TableRowColumn>
         <TableRowColumn style={{textAlign: 'center'}} key={user.score}>{user.score}</TableRowColumn>
       </TableRow>
-    <div className="movie-game-container">
+    <div className="movie-game-container" style={WebkitOverflowScrolling: "touch"}>
       <Card initiallyExpanded={true}>
         <Table>
           <TableHeader displaySelectAll={false}>
