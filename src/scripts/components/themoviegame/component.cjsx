@@ -158,9 +158,11 @@ module.exports = React.createClass
     prom.then (res) =>
       isCorrect = @checkAnswer(res.cast, @state.answer)
       if isCorrect
+        @setState(cast: res.cast)
         @getActorInfo(@state.currentActorId)
       else
         @setState(
+          cast: res.cast
           showSaveModal: true,
           gameOverMessage: @state.answer + " wasn't in " + @state.movie.title
         )
@@ -215,6 +217,7 @@ module.exports = React.createClass
       answer: null,
       movie: {},
       actor: {},
+      cast: [],
       currentActorId: null,
       usedMovies: [],
       usedActors: [],
@@ -276,7 +279,7 @@ module.exports = React.createClass
             </div>
     if @state.showSaveModal
       <div className="movie-game-container">
-        <Summary score={@state.score} visibility={@toggleModal} answer={@state.answer} movie={@state.movie} />
+        <Summary score={@state.score} visibility={@toggleModal} answer={@state.answer} movie={@state.movie} cast={@state.cast} />
         <Snackbar
           message={@state.gameOverMessage}
           openOnMount={@state.showSaveModal} />

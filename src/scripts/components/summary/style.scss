@@ -1,3 +1,37 @@
+.grid-list {
+  width: 100%;
+  max-height: 288px;
+  @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+    max-height: 394px;
+  }
+  @media only screen and (min-height: 1000px) and (min-width: 1200px) {
+    max-height: 566px;
+  }
+  overflow-y: auto;
+  margin-bottom: 24px;
+}
+
+.profile-title {
+  font-size: 12px;
+  @media only screen and (min-width : 768px) {
+    font-size: 16px;
+  }
+}
+
+.profile-subtitle {
+  font-size: 9px;
+  @media only screen and (min-width : 768px) {
+    font-size: 16px;
+  }
+}
+
+.profile-image {
+  @media only screen and (min-height: 1000px) and (min-width: 1200px) {
+    width: 100%;
+    height: auto !important;
+  }
+}
+
 .hidden-input {
   position: absolute;
   top: 0;
