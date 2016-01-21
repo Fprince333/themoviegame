@@ -73,9 +73,9 @@ module.exports = React.createClass
           </FlatButton>
         </form>
       </CardActions>
-      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
+      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around', WebkitOverflowScrolling: "touch"}}>
         <span style={marginBottom: 18}> Here's who you could have guessed</span>
-        <GridList cellHeight={278} cols={3} className={"grid-list"}>{tileElements}</GridList>
+        <GridList cellHeight={278} cols={3} className={"grid-list"} >{tileElements}</GridList>
       </div>
       <CardActions className={if @showButton() then 'hidden' else ''}>
         <FlatButton primary={true} onClick={@handleSkip} label="Play Again"/>
