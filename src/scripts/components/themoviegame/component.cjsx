@@ -271,6 +271,7 @@ module.exports = React.createClass
               <p>If you're right, you have to name another actor or actress in the next movie.</p>
               <p> Be careful - you can only use an actor once.</p>
               <p> Get the highest possible score and try to beat the leaders.</p>
+              <p> Want a better mobile experience? Add this page to your phone's homescreen and play it as an app</p>
               <p>Good Luck.</p>
             </div>
     if @state.showSaveModal
