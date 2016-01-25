@@ -54,8 +54,9 @@ module.exports = React.createClass
   render: ->
     tilesData = []
     currentActor = @props.actor
+    usedActors = _.map @props.actors, (actor) -> actor.id
     @props.cast.forEach (actor) ->
-      if actor.name isnt currentActor.name
+      if actor.name isnt currentActor.name and _.intersection(usedActors, [actor.id]).length is 0
         if actor.profile_path
           tilesData.push({ img: actor.profile_path, name: actor.name, character: actor.character })
     gradientBg = 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)'
