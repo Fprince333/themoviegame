@@ -234,7 +234,8 @@ module.exports = React.createClass
       isGuessable: true,
       showSaveModal: false,
       gameOverMessage: "",
-      showRules: true
+      showRules: true,
+      doNotUpdateComponent: false
     }
 
   componentWillMount: ->
@@ -246,26 +247,34 @@ module.exports = React.createClass
       newState.movie.genres.forEach (el) ->
         genres.push(el.id)
       if Checker.isNotReleased(newState.movie.release_date)
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else if Checker.isTooObscure(newState.movie.popularity)
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else if Checker.isNotAllowed(genres)
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else if newState.movie.original_language isnt "en"
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else if Checker.isTooOld(newState.movie.release_date)
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else if Checker.hasNoPoster(newState.movie)
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else
-        @setState( isGuessable: true )
+        @setState( isGuessable: true, doNotUpdateComponent: false )
         return true
+    else if newState.doNotUpdateComponent
+      return false
     else
       return true
 
