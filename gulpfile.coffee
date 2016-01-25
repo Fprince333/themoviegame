@@ -22,12 +22,7 @@ gulp.task('css', ->
       comments: false
       bundle_exec: true
       time: true
-      require: [
-        'susy',
-        'modular-scale',
-        'normalize-scss',
-        'sass-css-importer',
-        'breakpoint']
+      require: ['sass-css-importer']
     }))
     .on('error', (err) ->
       gutil.log err
