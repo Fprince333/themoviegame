@@ -9,6 +9,9 @@ CardActions = require 'material-ui/lib/card/card-actions'
 CardText = require 'material-ui/lib/card/card-text'
 FlatButton = require 'material-ui/lib/flat-button'
 TextField = require 'material-ui/lib/text-field'
+GridList = require 'material-ui/lib/grid-list/grid-list'
+GridTile = require 'material-ui/lib/grid-list/grid-tile'
+
 
 module.exports = React.createClass
   displayName: 'Summary',
@@ -49,6 +52,17 @@ module.exports = React.createClass
         console.log res.status
         @props.visibility(false)
   render: ->
+    tilesData = []
+    currentActor = @props.actor
+    usedActors = _.map @props.actors, (actor) -> actor.id
+    @props.cast.forEach (actor) ->
+      if actor.name isnt currentActor.name and _.intersection(usedActors, [actor.id]).length is 0
+        if actor.profile_path
+          tilesData.push({ img: actor.profile_path, name: actor.name, character: actor.character })
+    gradientBg = 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)'
+    tileElements = _.map tilesData, (tile) ->
+      <GridTile key={tile.img} actionPosition="left" titlePosition="top" titleBackground={gradientBg} title={<span className={'profile-title'}>{tile.name}</span>} subtitle={<span className={'profile-subtitle'} >playing {tile.character}</span>}><img className={'profile-image'} src={"http://image.tmdb.org/t/p/w185" + tile.img} /></GridTile>
+
     <Card>
       <CardTitle title="Nice Round" subtitle={"Score: " + @props.score}/>
       <CardActions className={if @showForm() then 'hidden' else ''}>
@@ -62,6 +76,10 @@ module.exports = React.createClass
           </FlatButton>
         </form>
       </CardActions>
+      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around', WebkitOverflowScrolling: "touch"}}>
+        <span style={marginBottom: 18}> Here's who you could have guessed</span>
+        <GridList cellHeight={278} cols={3} className={"grid-list"} >{tileElements}</GridList>
+      </div>
       <CardActions className={if @showButton() then 'hidden' else ''}>
         <FlatButton primary={true} onClick={@handleSkip} label="Play Again"/>
       </CardActions>

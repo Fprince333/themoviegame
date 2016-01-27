@@ -80,9 +80,11 @@ module.exports = React.createClass
       movieIndex = Math.floor(Math.random()*(res.cast.length - 1))
       while @movieHasBeenUsed(res.cast[movieIndex])
         movieIndex++
-      @updateMovieInfo(res.cast[movieIndex].id)
+      while res.cast.length < 5
+        movieIndex++
+      @updateMovieandCast(res.cast[movieIndex].id)
 
-  updateMovieInfo: (movieId) ->
+  updateMovieandCast: (movieId) ->
     prom = Api.getMovieInfo(movieId)
     prom.always =>
       console.log "done"
@@ -94,6 +96,13 @@ module.exports = React.createClass
         movie: res,
         usedMovies: updatedUsedMovieList
       )
+    prom = Api.getMovieCredits(movieId.toString())
+    prom.always =>
+      console.log("done")
+    prom.fail (err) ->
+      console.log("handle error " + err)
+    prom.then (res) =>
+      @setState(cast: res.cast)
 
   movieHasBeenUsed: (mov) ->
     used = false
@@ -159,6 +168,7 @@ module.exports = React.createClass
         @getActorInfo(@state.currentActorId)
       else
         @setState(
+          cast: res.cast
           showSaveModal: true,
           gameOverMessage: @state.answer + " wasn't in " + @state.movie.title
         )
@@ -213,6 +223,7 @@ module.exports = React.createClass
       answer: null,
       movie: {},
       actor: {},
+      cast: [],
       currentActorId: null,
       usedMovies: [],
       usedActors: [],
@@ -223,7 +234,8 @@ module.exports = React.createClass
       isGuessable: true,
       showSaveModal: false,
       gameOverMessage: "",
-      showRules: true
+      showRules: true,
+      doNotUpdateComponent: false
     }
 
   componentWillMount: ->
@@ -235,26 +247,34 @@ module.exports = React.createClass
       newState.movie.genres.forEach (el) ->
         genres.push(el.id)
       if Checker.isNotReleased(newState.movie.release_date)
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else if Checker.isTooObscure(newState.movie.popularity)
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else if Checker.isNotAllowed(genres)
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else if newState.movie.original_language isnt "en"
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else if Checker.isTooOld(newState.movie.release_date)
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else if Checker.hasNoPoster(newState.movie)
+        @setState(doNotUpdateComponent: true)
         @continue()
         return false
       else
-        @setState( isGuessable: true )
+        @setState( isGuessable: true, doNotUpdateComponent: false )
         return true
+    else if newState.doNotUpdateComponent
+      return false
     else
       return true
 
@@ -269,11 +289,12 @@ module.exports = React.createClass
               <p>If you're right, you have to name another actor or actress in the next movie.</p>
               <p> Be careful - you can only use an actor once.</p>
               <p> Get the highest possible score and try to beat the leaders.</p>
+              <p> Want a better mobile experience? Add this page to your phone's homescreen and play it as an app</p>
               <p>Good Luck.</p>
             </div>
     if @state.showSaveModal
       <div className="movie-game-container">
-        <Summary score={@state.score} visibility={@toggleModal} answer={@state.answer} movie={@state.movie} />
+        <Summary score={@state.score} visibility={@toggleModal} answer={@state.answer} movie={@state.movie} cast={@state.cast} actor={@state.actor} actors={@state.usedActors}/>
         <Snackbar
           message={@state.gameOverMessage}
           openOnMount={@state.showSaveModal} />
