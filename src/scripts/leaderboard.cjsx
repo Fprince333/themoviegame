@@ -21,7 +21,8 @@ module.exports = React.createClass
     currentPage: null,
     isLoading: true,
     scrollPosition: null,
-    loadMoreUsers: false
+    loadMoreUsers: false,
+    loadingTriggered: false
 
   componentDidMount: ->
     window.scroll(0,0)
@@ -43,7 +44,7 @@ module.exports = React.createClass
       )
 
   shouldComponentUpdate: (nextProps, nextState) ->
-    if nextState.loadMoreUsers
+    if nextState.loadMoreUsers and nextState.loadingTriggered
       @loadMoreUsers()
       return false
     else
@@ -62,14 +63,14 @@ module.exports = React.createClass
     bounds.bottom = bounds.top + $('.trigger').outerHeight()
 
     if (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom))
-      if previousScroll < currentScroll and @state.currentPage < @state.totalPages and @state.members.length < @state.totalMembers
-        @setState(loadMoreUsers: true)
+      if previousScroll < currentScroll and @state.currentPage < @state.totalPages and @state.members.length < @state.totalMembers and !@state.loadingTriggered
+        @setState(loadMoreUsers: true, loadingTriggered: true)
     @setState(scrollPosition: currentScroll)
 
   loadMoreUsers: ->
     console.log "Load more..."
-    @setState(loadMoreUsers: false)
-    if @state.members.length < @state.totalMembers
+    if @state.members.length < @state.totalMembers and @state.loadingTriggered
+      @setState(loadingTriggered: false)
       nextPage = @state.currentPage + 1
       prom = Api.getNextPageOfScores(nextPage)
       prom.always =>
@@ -77,7 +78,6 @@ module.exports = React.createClass
       prom.fail (err) ->
         console.log "handle " + err.status + " " + err.statusText
       prom.then (res) =>
-        moreLeaders = _.uniq(res.members, @state.members)
         moreLeaders = res.members
         updatedLeaderList = @state.members.concat(moreLeaders)
         @setState(members: updatedLeaderList, currentPage: nextPage)
