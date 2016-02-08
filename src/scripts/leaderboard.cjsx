@@ -77,7 +77,7 @@ module.exports = React.createClass
       prom.fail (err) ->
         console.log "handle " + err.status + " " + err.statusText
       prom.then (res) =>
-        moreLeaders = res.members
+        moreLeaders = _.uniq(res.members, @state.members)
         updatedLeaderList = @state.members.concat(moreLeaders)
         @replaceState(members: updatedLeaderList, currentPage: nextPage)
     else
