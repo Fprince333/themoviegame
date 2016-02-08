@@ -70,16 +70,19 @@ module.exports = React.createClass
 
   loadMoreUsers: ->
     @setState(loadMoreUsers: false)
-    nextPage = @state.currentPage + 1
-    prom = Api.getNextPageOfScores(nextPage)
-    prom.always =>
-      console.log "done"
-    prom.fail (err) ->
-      console.log "handle " + err.status + " " + err.statusText
-    prom.then (res) =>
-      moreLeaders = res.members
-      updatedLeaderList = @state.members.concat(moreLeaders)
-      @replaceState(members: updatedLeaderList, currentPage: nextPage)
+    if @state.members.length < @state.totalMembers
+      nextPage = @state.currentPage + 1
+      prom = Api.getNextPageOfScores(nextPage)
+      prom.always =>
+        console.log "done"
+      prom.fail (err) ->
+        console.log "handle " + err.status + " " + err.statusText
+      prom.then (res) =>
+        moreLeaders = res.members
+        updatedLeaderList = @state.members.concat(moreLeaders)
+        @replaceState(members: updatedLeaderList, currentPage: nextPage)
+    else
+      return
 
   render: ->
     if @state.isLoading
