@@ -62,7 +62,7 @@ module.exports = React.createClass
     bounds.bottom = bounds.top + $('.trigger').outerHeight()
 
     if (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom))
-      if previousScroll < currentScroll
+      if previousScroll < currentScroll and @state.currentPage < @state.totalPages
         @setState(loadMoreUsers: true)
     else
       @setState(loadMoreUsers: false)
