@@ -9,7 +9,6 @@ TableBody = require 'material-ui/lib/table/table-body'
 TableRow = require 'material-ui/lib/table/table-row'
 TableRowColumn = require 'material-ui/lib/table/table-row-column'
 Card = require 'material-ui/lib/card/card'
-Waypoint = require 'react-waypoint'
 
 module.exports = React.createClass
   displayName: 'Leaderboard'
