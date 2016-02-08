@@ -9,6 +9,7 @@ TableBody = require 'material-ui/lib/table/table-body'
 TableRow = require 'material-ui/lib/table/table-row'
 TableRowColumn = require 'material-ui/lib/table/table-row-column'
 Card = require 'material-ui/lib/card/card'
+$ = require 'jquery'
 
 module.exports = React.createClass
   displayName: 'Leaderboard'
@@ -18,7 +19,9 @@ module.exports = React.createClass
     totalMembers: null,
     totalPages: null,
     currentPage: null,
-    isLoading: true
+    isLoading: true,
+    scrollPosition: null,
+    loadMoreUsers: false
 
   componentDidMount: ->
     window.scroll(0,0)
@@ -39,36 +42,31 @@ module.exports = React.createClass
         isLoading: false
       )
 
-  # componentWillUpdate: (nextProps, nextState) ->
-  #   if nextState.fetchUsers and @state.currentScrollPosition < nextState.currentScrollPosition
-  #     @loadMoreUsers()
-  #     return true
-  #   else
-  #     return false
+  componentWillUpdate: (nextProps, nextState) ->
+    if nextState.loadMoreUsers
+      @loadMoreUsers()
+      return true
+    else
+      return false
 
-  # handleScroll: (e) ->
-  #   containerHeight = e.target.parentNode.scrollHeight
-  #   tableHeight = e.target.lastChild.getElementsByClassName('mui-table-body')[0].offsetHeight
-  #   scrollPosition = e.target.scrollTop
-  #   @setState(currentScrollPosition: scrollPosition)
-  #   @handleUserFetching(containerHeight, tableHeight, scrollPosition)
+  handleScroll: (e) ->
+    currentScroll = $(e.target).scrollTop()
+    previousScroll = @state.scrollPosition
+    win = $('.users-container')
+    viewport = top: win.scrollTop(), left: win.scrollLeft()
+    viewport.right = viewport.left + win.width()
+    viewport.bottom = viewport.top + win.height()
 
-  # handleUserFetching: (cHeight, tHeight, position) ->
-  #   SMALL_BREAKPOINT = 553
-  #   SMALL_CONTAINER  = 480
-  #   LARGE_BREAKPOINT = 267
-  #   LARGE_CONTAINER  = 768
+    bounds = $('.trigger').offset()
+    bounds.right = bounds.left + $('.trigger').outerWidth()
+    bounds.bottom = bounds.top + $('.trigger').outerHeight()
 
-  #   if cHeight is SMALL_CONTAINER
-  #     if (position / SMALL_BREAKPOINT) % 1 is 0
-  #       @loadMoreUsers()
-
-  #   if cHeight is LARGE_CONTAINER
-  #     if (position / LARGE_BREAKPOINT) % 1 is 0
-  #       @loadMoreUsers()
-  #   # console.log "Container Height: " + cHeight
-  #   # console.log "Table Height: " + tHeight
-  #   console.log "Scroll Position: " + position
+    if (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom))
+      if previousScroll < currentScroll
+        @setState(loadMoreUsers: true)
+    else
+      @setState(loadMoreUsers: false)
+    @setState(scrollPosition: currentScroll)
 
   loadMoreUsers: ->
     nextPage = @state.currentPage + 1
@@ -83,22 +81,16 @@ module.exports = React.createClass
       @setState(
         members: updatedLeaderList,
         currentPage: nextPage
+        loadMoreUsers: false
       )
-
-  _handleWaypointEnter: ->
-    debugger
-
-  _handleWaypointLeave: ->
-    debugger
 
   render: ->
     if @state.isLoading
       <Loader />
     else
-      waypoint = <Waypoint key={"fuck"} onEnter={@_handleWaypointEnter} onLeave={@_handleWaypointLeave} threshold={0.2}></Waypoint>
       userList = _.map @state.members, (user, key, users) ->
-        if key % 20 is 0 and key isnt 0
-          <TableRow key={key}>
+        if key is users.length - 5
+          <TableRow key={key} className={"trigger"}>
             <TableRowColumn style={{textAlign: 'center'}} key={user.rank} >{user.rank}</TableRowColumn>
             <TableRowColumn style={{textAlign: 'center'}} key={user.member}>{user.member}</TableRowColumn>
             <TableRowColumn style={{textAlign: 'center'}} key={user.score}>{user.score}</TableRowColumn>
@@ -109,7 +101,7 @@ module.exports = React.createClass
             <TableRowColumn style={{textAlign: 'center'}} key={user.member}>{user.member}</TableRowColumn>
             <TableRowColumn style={{textAlign: 'center'}} key={user.score}>{user.score}</TableRowColumn>
           </TableRow>
-      <div className="movie-game-container" style={WebkitOverflowScrolling: "touch"}>
+      <div className="movie-game-container users-container" style={WebkitOverflowScrolling: "touch"} onScroll={@handleScroll}>
         <Card initiallyExpanded={true}>
           <Table>
             <TableHeader displaySelectAll={false}>
@@ -124,6 +116,5 @@ module.exports = React.createClass
             </TableBody>
           </Table>
         </Card>
-        {waypoint}
       </div>
 
