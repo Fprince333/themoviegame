@@ -46,8 +46,6 @@ module.exports = React.createClass
     if nextState.loadMoreUsers
       @loadMoreUsers()
       return true
-    else if nextState.members.length > @state.members.length
-      return true
     else
       return false
 
@@ -64,7 +62,7 @@ module.exports = React.createClass
     bounds.bottom = bounds.top + $('.trigger').outerHeight()
 
     if (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom))
-      if previousScroll < currentScroll and @state.currentPage < @state.totalPages
+      if previousScroll < currentScroll and @state.currentPage < @state.totalPages and @state.members.length < @state.totalMembers
         @setState(loadMoreUsers: true)
     @setState(scrollPosition: currentScroll)
 
