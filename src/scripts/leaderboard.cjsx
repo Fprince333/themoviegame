@@ -78,6 +78,7 @@ module.exports = React.createClass
         console.log "handle " + err.status + " " + err.statusText
       prom.then (res) =>
         moreLeaders = _.uniq(res.members, @state.members)
+        moreLeaders = res.members
         updatedLeaderList = @state.members.concat(moreLeaders)
         @setState(members: updatedLeaderList, currentPage: nextPage)
     else
@@ -87,7 +88,8 @@ module.exports = React.createClass
     if @state.isLoading
       <Loader />
     else
-      userList = _.map @state.members, (user, key, users) ->
+      filteredList = _.uniq(@state.members)
+      userList = _.map filteredList, (user, key, users) ->
         if key is users.length - 5
           <TableRow key={key} className={"trigger"}>
             <TableRowColumn style={{textAlign: 'center'}} key={user.rank} >{user.rank}</TableRowColumn>
