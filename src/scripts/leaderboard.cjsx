@@ -46,6 +46,8 @@ module.exports = React.createClass
     if nextState.loadMoreUsers
       @loadMoreUsers()
       return true
+    else if nextState.members.length > @state.members.length
+      return true
     else
       return false
 
@@ -64,11 +66,10 @@ module.exports = React.createClass
     if (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom))
       if previousScroll < currentScroll and @state.currentPage < @state.totalPages
         @setState(loadMoreUsers: true)
-    else
-      @setState(loadMoreUsers: false)
     @setState(scrollPosition: currentScroll)
 
   loadMoreUsers: ->
+    @setState(loadMoreUsers: false)
     nextPage = @state.currentPage + 1
     prom = Api.getNextPageOfScores(nextPage)
     prom.always =>
@@ -78,11 +79,7 @@ module.exports = React.createClass
     prom.then (res) =>
       moreLeaders = res.members
       updatedLeaderList = @state.members.concat(moreLeaders)
-      @setState(
-        members: updatedLeaderList,
-        currentPage: nextPage
-        loadMoreUsers: false
-      )
+      @replaceState(members: updatedLeaderList, currentPage: nextPage)
 
   render: ->
     if @state.isLoading
