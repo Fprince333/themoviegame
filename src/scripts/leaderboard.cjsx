@@ -79,7 +79,7 @@ module.exports = React.createClass
       prom.then (res) =>
         moreLeaders = _.uniq(res.members, @state.members)
         updatedLeaderList = @state.members.concat(moreLeaders)
-        @replaceState(members: updatedLeaderList, currentPage: nextPage)
+        @setState(members: updatedLeaderList, currentPage: nextPage)
     else
       return
 
