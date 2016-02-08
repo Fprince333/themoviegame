@@ -69,6 +69,7 @@ module.exports = React.createClass
     @setState(scrollPosition: currentScroll)
 
   loadMoreUsers: ->
+    console.log "Loading users..."
     @setState(loadMoreUsers: false)
     if @state.members.length < @state.totalMembers
       nextPage = @state.currentPage + 1
