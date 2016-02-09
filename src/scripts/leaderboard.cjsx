@@ -21,8 +21,7 @@ module.exports = React.createClass
     currentPage: null,
     isLoading: true,
     scrollPosition: null,
-    loadMoreUsers: false,
-    loadingTriggered: false
+    loadMoreUsers: false
 
   componentDidMount: ->
     window.scroll(0,0)
@@ -43,13 +42,6 @@ module.exports = React.createClass
         isLoading: false
       )
 
-  shouldComponentUpdate: (nextProps, nextState) ->
-    if nextState.loadMoreUsers and nextState.loadingTriggered
-      @loadMoreUsers()
-      return false
-    else
-      return true
-
   handleScroll: (e) ->
     currentScroll = $(e.target).scrollTop()
     previousScroll = @state.scrollPosition
@@ -63,14 +55,15 @@ module.exports = React.createClass
     bounds.bottom = bounds.top + $('.trigger').outerHeight()
 
     if (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom))
-      if previousScroll < currentScroll and @state.currentPage < @state.totalPages and @state.members.length < @state.totalMembers and !@state.loadingTriggered
-        @setState(loadMoreUsers: true, loadingTriggered: true)
+      if previousScroll < currentScroll and @state.currentPage < @state.totalPages and @state.members.length < @state.totalMembers
+        @setState(loadMoreUsers: true)
+        @loadMoreUsers()
     @setState(scrollPosition: currentScroll)
 
   loadMoreUsers: ->
     console.log "Load more..."
-    if @state.members.length < @state.totalMembers and @state.loadingTriggered
-      @setState(loadingTriggered: false)
+    if @state.members.length < @state.totalMembers
+      @setState(loadMoreUsers: false)
       nextPage = @state.currentPage + 1
       prom = Api.getNextPageOfScores(nextPage)
       prom.always =>
@@ -88,8 +81,7 @@ module.exports = React.createClass
     if @state.isLoading
       <Loader />
     else
-      filteredList = _.uniq(@state.members)
-      userList = _.map filteredList, (user, key, users) ->
+      userList = _.map @state.members, (user, key, users) ->
         if key is users.length - 5
           <TableRow key={key} className={"trigger"}>
             <TableRowColumn style={{textAlign: 'center'}} key={user.rank} >{user.rank}</TableRowColumn>
