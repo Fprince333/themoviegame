@@ -88,7 +88,9 @@ module.exports = React.createClass
     if @state.isLoading
       <Loader />
     else
-      userList = _.map @state.members, (user, key, users) ->
+      uniqueUsers = _.uniq(@state.members, (item, key, a) -> item.rank)
+      console.log uniqueUsers
+      userList = _.map uniqueUsers, (user, key, users) ->
         if key is users.length - 5
           <TableRow key={key} className={"trigger"}>
             <TableRowColumn style={{textAlign: 'center'}} key={user.rank} >{user.rank}</TableRowColumn>
