@@ -42,6 +42,13 @@ module.exports = React.createClass
         isLoading: false
       )
 
+  shouldComponentUpdate: (nextProps, nextState) ->
+    if nextState.loadMoreUsers
+      @loadMoreUsers()
+      return false
+    else
+      return true
+
   handleScroll: (e) ->
     currentScroll = $(e.target).scrollTop()
     previousScroll = @state.scrollPosition
@@ -57,12 +64,11 @@ module.exports = React.createClass
     if (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom))
       if previousScroll < currentScroll and @state.currentPage < @state.totalPages and @state.members.length < @state.totalMembers
         @setState(loadMoreUsers: true)
-        @loadMoreUsers()
     @setState(scrollPosition: currentScroll)
 
   loadMoreUsers: ->
     console.log "Load more..."
-    if @state.members.length < @state.totalMembers and @state.loadMoreUsers
+    if @state.members.length < @state.totalMembers
       @setState(loadMoreUsers: false)
       nextPage = @state.currentPage + 1
       prom = Api.getNextPageOfScores(nextPage)
