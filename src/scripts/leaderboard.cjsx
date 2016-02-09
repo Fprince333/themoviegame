@@ -62,7 +62,7 @@ module.exports = React.createClass
 
   loadMoreUsers: ->
     console.log "Load more..."
-    if @state.members.length < @state.totalMembers
+    if @state.members.length < @state.totalMembers and @state.loadMoreUsers
       @setState(loadMoreUsers: false)
       nextPage = @state.currentPage + 1
       prom = Api.getNextPageOfScores(nextPage)
