@@ -63,12 +63,10 @@ module.exports = React.createClass
 
     if (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom))
       if previousScroll < currentScroll and @state.currentPage < @state.totalPages and @state.members.length < @state.totalMembers
-        console.log "loading triggered"
         @setState(loadMoreUsers: true)
     @setState(scrollPosition: currentScroll)
 
   loadMoreUsers: ->
-    console.log "Load more..."
     if @state.members.length < @state.totalMembers
       @setState(loadMoreUsers: false)
       nextPage = @state.currentPage + 1
@@ -89,7 +87,6 @@ module.exports = React.createClass
       <Loader />
     else
       uniqueUsers = _.uniq(@state.members, (item, key, a) -> item.rank)
-      console.log uniqueUsers
       userList = _.map uniqueUsers, (user, key, users) ->
         if key is users.length - 5
           <TableRow key={key} className={"trigger"}>
