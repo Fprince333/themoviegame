@@ -63,6 +63,7 @@ module.exports = React.createClass
 
     if (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom))
       if previousScroll < currentScroll and @state.currentPage < @state.totalPages and @state.members.length < @state.totalMembers
+        console.log "loading triggered"
         @setState(loadMoreUsers: true)
     @setState(scrollPosition: currentScroll)
 
