@@ -1,7 +1,7 @@
 $ = require 'jquery'
 
 urlForPath = (path) ->
-  url = if process.env.NODE_ENV is 'production' then 'http://tmg-api.herokuapp.com' else 'http://localhost:3000'
+  url = if process.env.NODE_ENV is 'production' then 'http://the-movie-game.herokuapp.com' else 'http://localhost:3000'
   url += path
   url
 
