@@ -6,7 +6,6 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.4'
 gem 'rails-api'
-gem 'pg'
 gem 'leaderboard'
 gem 'rack-cors'
 gem 'active_model_serializers', '~> 0.10.0.rc1'
@@ -27,5 +26,6 @@ group :development do
 end
 
 group :staging, :production do
+  gem 'pg'
   gem 'rails_12factor'
 end
