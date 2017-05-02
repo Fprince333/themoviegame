@@ -15,7 +15,6 @@ gem 'sass-css-importer'
 
 group :development, :test do
   gem 'pry'
-  gem 'pg'
 end
 
 group :development do
