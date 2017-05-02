@@ -15,6 +15,7 @@ gem 'sass-css-importer'
 
 group :development, :test do
   gem 'pry'
+  gem 'pg'
 end
 
 group :development do
@@ -26,6 +27,5 @@ group :development do
 end
 
 group :staging, :production do
-  gem 'pg'
   gem 'rails_12factor'
 end
