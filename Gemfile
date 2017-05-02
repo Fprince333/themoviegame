@@ -9,6 +9,7 @@ gem 'rails-api'
 gem 'leaderboard'
 gem 'rack-cors'
 gem 'active_model_serializers', '~> 0.10.0.rc1'
+gem 'pg' #stub this out when pushihg to master, only use for heroku
 gem 'sass'
 gem 'compass'
 gem 'sass-css-importer'
