@@ -1,62 +1,18 @@
 {
-  "private": true,
-  "name": "themoviegame-web",
-  "description": "Movie > Actor > Movie > Actor > ...",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Fprince333/themoviegame-web"
-  },
-  "version": "0.0.1",
-  "engines": {
-    "node": ">=4.1 <5",
-    "npm": ">=3.1 <4"
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject"
   },
   "dependencies": {
-    "cjsx-loader": "^2.0.1",
-    "coffee-loader": "^0.7.2",
-    "coffee-react-transform": "^3.1.0",
-    "coffee-script": "^1.9.3",
-    "css-loader": "^0.14.4",
-    "gulp": "^3.9.0",
-    "gulp-compass": "^2.1.0",
-    "gulp-load-plugins": "^0.10.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-shell": "^0.4.2",
-    "gulp-size": "^1.2.1",
-    "gulp-util": "^3.0.5",
-    "jquery": "^2.1.4",
-    "map-stream": "0.0.5",
-    "material-ui": "^0.13.1",
-    "moment": "^2.10.6",
-    "node-sass": "^3.4.1",
-    "react": "^0.14.2",
-    "react-addons-create-fragment": "^0.14.2",
-    "react-addons-pure-render-mixin": "^0.14.2",
-    "react-addons-transition-group": "^0.14.2",
-    "react-addons-update": "^0.14.2",
-    "react-dom": "0.14.0",
-    "react-form-data": "^0.2.3",
-    "react-hot-loader": "^1.3.0",
-    "react-retina-image": "^1.3.3",
-    "react-router": "^0.13.3",
-    "react-tap-event-plugin": "^0.2.1",
-    "sass-loader": "^1.0.2",
-    "style-loader": "^0.12.3",
-    "touch": "^1.0.0",
-    "underscore": "^1.8.3",
-    "webpack": "^1.12.0",
-    "webpack-dev-server": "^1.10.1"
+    "expo": "^32.0.0",
+    "react": "16.5.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz"
   },
-  "moduleFileExtensions": [
-    "js",
-    "json",
-    "coffee",
-    "cjsx"
-  ],
-  "main": "server.coffee",
-  "scripts": {
-    "watch": "./node_modules/.bin/gulp watch",
-    "build": "./node_modules/.bin/gulp build"
+  "devDependencies": {
+    "babel-preset-expo": "^5.0.0"
   },
-  "license": "MIT"
+  "private": true
 }
