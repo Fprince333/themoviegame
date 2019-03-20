@@ -127,9 +127,11 @@ export default class Game extends React.Component {
         {this.state.turn === this.username ?
           <Guess
             handleGuess={guess => this.handleGuessSubmit(guess)}
+            handleTimeUp={() => this.handleGameOver()}
             guessType={this.state.guessType}
             previousGuess={this.state.opponent_guess} /> :
-          <Timer handleTimeUp={() => this.handleGameOver()}
+          <Timer
+            handleTimeUp={() => this.handleGameOver()}
             turn={this.state.turn}
             guessType={this.state.guessType}
             previousGuess={this.state.my_guess} /> }
