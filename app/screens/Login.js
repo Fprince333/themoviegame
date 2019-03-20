@@ -10,6 +10,8 @@ import {
 
 import Pusher from "pusher-js/react-native";
 
+import formatChannelName from "../helpers/formatChannelName";
+
 export default class Login extends React.Component {
   static navigationOptions = {
     header: null
@@ -30,7 +32,7 @@ export default class Login extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.topContent}>
-          <Text style={styles.bigText}>RNMemory</Text>
+          <Text style={styles.bigText}>The Movie Game</Text>
         </View>
 
         <View style={styles.mainContent}>
@@ -65,7 +67,7 @@ export default class Login extends React.Component {
       });
 
       this.pusher = new Pusher("f9eaa640678326ebe543", {
-        authEndpoint: "https://a8fff9ec.ngrok.io/pusher/auth",
+        authEndpoint: "https://02618df3.ngrok.io/pusher/auth",
         cluster: "us2",
         encrypted: true,
         auth: {
@@ -73,12 +75,24 @@ export default class Login extends React.Component {
         }
       });
 
-      this.my_channel = this.pusher.subscribe(`private-user-${username}`);
+      this.my_channel = this.pusher.subscribe(`private-user-${formatChannelName(username)}`);
       this.my_channel.bind("pusher:subscription_error", status => {
-        Alert.alert(
-          "Error",
-          "Subscription error occurred. Please restart the app"
-        );
+        if (status === 406) {
+          Alert.alert(
+            "Error",
+            "Your opponent is using that username. Please pick another."
+          );
+        } else {
+          Alert.alert(
+            "Error",
+            "A subscription error occurred. Please try again."
+          );
+        }
+        this.setState({
+          is_loading: false,
+          username: ""
+        });
+
       });
 
       this.my_channel.bind("pusher:subscription_succeeded", data => {
@@ -90,7 +104,7 @@ export default class Login extends React.Component {
           let opponent =
             username == data.player_one ? data.player_two : data.player_one;
 
-          Alert.alert("Opponent found!", `${opponent} will take you on!`);
+          let starter = data.player_two;
 
           this.setState({
             is_loading: false,
@@ -101,6 +115,7 @@ export default class Login extends React.Component {
             pusher: this.pusher,
             username: username,
             opponent: opponent,
+            starter: starter,
             my_channel: this.my_channel
           });
         });
