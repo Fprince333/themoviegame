@@ -140,8 +140,7 @@ export default class Game extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.topContent}>
-          <Text style={styles.bigText}>The Movie Game</Text>
-          <Text style={styles.label}>{this.username}</Text>
+          <Text style={styles.bigText}>{this.username} vs {this.opponent}</Text>
         </View>
         {this.state.turn === this.username ?
           <Guess

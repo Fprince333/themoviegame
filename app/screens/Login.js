@@ -1,12 +1,12 @@
 import React from "react";
 import {
   View,
-  Text,
   TextInput,
-  Button,
   Alert,
   ActivityIndicator
 } from "react-native";
+import { Text, Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Pusher from "pusher-js/react-native";
 
@@ -32,26 +32,35 @@ export default class Login extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.topContent}>
-          <Text style={styles.bigText}>The Movie Game</Text>
+          <Text h2 h2Style={{color: '#FFF'}}>The Movie Game</Text>
+        </View>
+
+        <View style={styles.icon}>
+          <Icon name="film" color="#FFF" size={75} />
         </View>
 
         <View style={styles.mainContent}>
-          <Text style={styles.label}>Username</Text>
-          <TextInput
-            style={styles.text_field}
-            onChangeText={username => {
-              this.setState({ username });
-            }}
-            value={this.state.username}
-            placeholder="Enter your username"
-          />
 
           {!this.state.is_loading && (
-            <Button onPress={this.login} title="Enter" color="#0064e1" />
+            <React.Fragment>
+              <Text style={styles.label}>Username</Text>
+              <TextInput
+                style={styles.text_field}
+                onChangeText={username => {
+                  this.setState({ username });
+                }}
+                value={this.state.username}
+                selectionColor={'#FFF'}
+            />
+              <Button onPress={this.login} title="Play" buttonStyle={{ backgroundColor: '#FFF' }} titleStyle={{ color: '#0064e1'}}/>
+            </React.Fragment>
           )}
 
           {this.state.is_loading && (
-            <ActivityIndicator size="large" color="#0000ff" />
+            <React.Fragment>
+              <ActivityIndicator size="large" color="#FFF" />
+              <Text style={styles.label}>Waiting For Opponent</Text>
+             </React.Fragment>
           )}
         </View>
       </View>
@@ -128,31 +137,33 @@ const styles = {
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: "#2089dc"
   },
   topContent: {
     flex: 1,
     justifyContent: "center"
   },
-  bigText: {
-    fontSize: 25,
-    fontWeight: "bold"
-  },
   mainContent: {
     flex: 1
   },
+  icon: {
+    marginBottom: 75
+  },
   label: {
+    marginTop: 15,
     marginBottom: 5,
     fontSize: 15,
     fontWeight: "bold",
-    color: "#333"
+    color: "#FFF"
   },
   text_field: {
     width: 200,
     height: 40,
-    borderColor: "#bfbfbf",
+    borderColor: "#FFF",
     borderWidth: 1,
     padding: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    color: '#FFF'
   }
 };

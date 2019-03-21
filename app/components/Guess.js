@@ -14,6 +14,7 @@ export default class Guess extends React.Component {
 
     return (
       <View style={styles.mainContent}>
+        <Text style={styles.label}>You have</Text>
         <TimerCountdown
           initialMilliseconds={1000 * 300}
           formatMilliseconds={(milliseconds) => {
@@ -30,7 +31,7 @@ export default class Guess extends React.Component {
           allowFontScaling={true}
           style={{ fontSize: 20, color: 'black' }}
         />
-        <Text style={styles.label}>To name {this.props.guessType === 'movie' ? this.props.previousGuess.length ? `a movie that ${this.props.previousGuess} was in.` : `a movie.` : this.props.previousGuess.length ? `an actor or actress in ${this.props.previousGuess}.` : `an actor or actress.`}</Text>
+        <Text style={styles.label}>to name {this.props.guessType === 'movie' ? this.props.previousGuess.length ? `a movie that ${this.props.previousGuess} was in.` : `a movie.` : this.props.previousGuess.length ? `an actor or actress in ${this.props.previousGuess}.` : `an actor or actress.`}</Text>
         <TextInput
           style={styles.text_field}
           onChangeText={guess => {
