@@ -42,6 +42,23 @@ export default class Guess extends React.Component {
           returnKeyType='done'
           onSubmitEditing={() => this.props.handleGuess(this.state.guess)}
         />
+        {this.props.previousGuess.length ?
+          <View>
+            <Button
+              buttonStyle={{ backgroundColor: '#2089dc' }}
+              title="Challenge Your Opponent's Answer"
+              titleStyle={{color: '#FFF'}}
+              onPress={this.props.handleChallengePrevious}
+            />
+            <Button
+              buttonStyle={{ backgroundColor: '#2089dc' }}
+              title="Challenge Opponent To Answer"
+              titleStyle={{ color: '#FFF' }}
+              onPress={this.props.handleChallengeNext}
+            />
+          </View> :
+          null
+        }
       </View>
     );
   }

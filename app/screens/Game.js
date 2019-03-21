@@ -97,6 +97,11 @@ export default class Game extends React.Component {
           this.props.navigation.navigate("Login", {});
         });
 
+        // this.opponent_channel.bind("client-opponent-challenged", data => {
+        //   console.log(data.guessType);
+        //   console.log(data.guess);
+        // });
+
       });
     }
   }
@@ -131,6 +136,14 @@ export default class Game extends React.Component {
 
   };
 
+  handleChallengePrevious = () => {
+    // TODO: Check against movie database api to verify answer
+  }
+
+  handleChallengeNext = () => {
+    // TODO: Send challenge via pusher to opponent to answer
+  }
+
   resetGame = () => {
     this.props.navigation.navigate("Login", {});
   };
@@ -147,7 +160,9 @@ export default class Game extends React.Component {
           <Guess
             handleGuess={guess => this.handleGuessSubmit(guess)}
             guessType={this.state.guessType}
-            previousGuess={this.state.opponent_guess} /> :
+            previousGuess={this.state.opponent_guess}
+            handleChallengePrevious={() => this.handleChallengePrevious()}
+            handleChallengeNext={() => this.handleChallengeNext()} /> :
           <Timer
             handleTimeUp={() => this.handleGameOver()}
             turn={this.state.turn}
