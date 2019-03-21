@@ -16,7 +16,6 @@ export default class Guess extends React.Component {
       <View style={styles.mainContent}>
         <TimerCountdown
           initialMilliseconds={1000 * 300}
-          onExpire={this.props.handleTimeUp}
           formatMilliseconds={(milliseconds) => {
             const remainingSec = Math.round(milliseconds / 1000);
             const seconds = parseInt((remainingSec % 60).toString(), 10);

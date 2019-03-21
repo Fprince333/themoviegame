@@ -1,23 +1,42 @@
 import React from "react";
-import { View, Text, Button, Alert } from "react-native";
-import { FontAwesome, Entypo } from "@expo/vector-icons";
+import { View, Text, Alert } from "react-native";
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Guess from "../components/Guess";
-// import OpponentGuess from "../components/OpponentGuess";
 import Timer from "../components/Timer";
 
 import formatChannelName from "../helpers/formatChannelName";
 
 export default class Game extends React.Component {
-  static navigationOptions = () => {
+  static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: `The Movie Game`,
+      headerTitle: 'The Movie Game',
       headerStyle: {
-        backgroundColor: "#333"
+        backgroundColor: "#2089dc"
       },
       headerTitleStyle: {
         color: "#FFF"
-      }
+      },
+      headerLeft: <Button
+        type='clear'
+        title='Back'
+        icon={
+          <Icon name='arrow-left' size={15} color="white" />
+        }
+        titleStyle={{
+          color: "white",
+          fontSize: 15,
+          marginLeft: 5
+        }}
+        onPress={() => {
+          navigation.getParam("my_channel").trigger("client-opponent-won", {
+            winner: navigation.getParam("opponent"),
+            reason: "Your opponent exited the game."
+          });
+          navigation.navigate("Login", {})
+        }}
+      />
     };
   };
 
@@ -75,6 +94,7 @@ export default class Game extends React.Component {
             `Congrats ${data.winner}, you won!`,
             `${data.reason}`
           );
+          this.props.navigation.navigate("Login", {});
         });
 
       });
@@ -82,7 +102,6 @@ export default class Game extends React.Component {
   }
 
   handleGameOver = () => {
-    // FIX ME, this is reversed
     Alert.alert(
       `Sorry, ${this.opponent} won.`,
       `"You ran out of time."`
@@ -127,7 +146,6 @@ export default class Game extends React.Component {
         {this.state.turn === this.username ?
           <Guess
             handleGuess={guess => this.handleGuessSubmit(guess)}
-            handleTimeUp={() => this.handleGameOver()}
             guessType={this.state.guessType}
             previousGuess={this.state.opponent_guess} /> :
           <Timer
