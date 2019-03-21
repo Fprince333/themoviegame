@@ -1,6 +1,7 @@
 import React from "react";
 import {
   View,
+  KeyboardAvoidingView,
   TextInput,
   Alert,
   ActivityIndicator
@@ -30,7 +31,7 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <View style={styles.topContent}>
           <Text h2 h2Style={{color: '#FFF'}}>The Movie Game</Text>
         </View>
@@ -43,7 +44,7 @@ export default class Login extends React.Component {
 
           {!this.state.is_loading && (
             <React.Fragment>
-              <Text style={styles.label}>Username</Text>
+              <Text style={styles.label}>Enter Username</Text>
               <TextInput
                 style={styles.text_field}
                 onChangeText={username => {
@@ -51,8 +52,9 @@ export default class Login extends React.Component {
                 }}
                 value={this.state.username}
                 selectionColor={'#FFF'}
+                onSubmitEditing={this.login}
+                returnKeyType='go'
             />
-              <Button onPress={this.login} title="Play" buttonStyle={{ backgroundColor: '#FFF' }} titleStyle={{ color: '#0064e1'}}/>
             </React.Fragment>
           )}
 
@@ -63,7 +65,7 @@ export default class Login extends React.Component {
              </React.Fragment>
           )}
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 
@@ -142,13 +144,19 @@ const styles = {
   },
   topContent: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
+    marginTop: 50
   },
   mainContent: {
-    flex: 1
+    flex: 1,
+    justifyContent: "flex-start",
+    marginBottom: 200
   },
   icon: {
-    marginBottom: 75
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginTop: 50
   },
   label: {
     marginTop: 15,

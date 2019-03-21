@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, View, Text, TextInput } from "react-native";
+import { View, Text, TextInput } from "react-native";
+import { Button } from 'react-native-elements';
 import TimerCountdown from "react-native-timer-countdown";
 
 export default class Guess extends React.Component {
@@ -31,16 +32,16 @@ export default class Guess extends React.Component {
           allowFontScaling={true}
           style={{ fontSize: 20, color: 'black' }}
         />
-        <Text style={styles.label}>to name {this.props.guessType === 'movie' ? this.props.previousGuess.length ? `a movie that ${this.props.previousGuess} was in.` : `a movie.` : this.props.previousGuess.length ? `an actor or actress in ${this.props.previousGuess}.` : `an actor or actress.`}</Text>
         <TextInput
           style={styles.text_field}
           onChangeText={guess => {
             this.setState({ guess: guess });
           }}
           value={this.state.guess}
-          placeholder={`Pick ${this.props.guessType === 'movie' ? 'a movie' : 'an actor or actress'}`}
+          placeholder={`to pick ${this.props.guessType === 'movie' ? 'a movie' : 'an actor or actress'}`}
+          returnKeyType='done'
+          onSubmitEditing={() => this.props.handleGuess(this.state.guess)}
         />
-        {this.state.guess.length ? <Button onPress={() => this.props.handleGuess(this.state.guess)} title="Enter" color="#0064e1" /> : null }
       </View>
     );
   }
@@ -66,6 +67,8 @@ const styles = {
     borderColor: "#bfbfbf",
     borderWidth: 1,
     padding: 10,
-    marginBottom: 10
+    marginTop: 15,
+    marginBottom: 10,
+    textAlign: "center"
   }
 };

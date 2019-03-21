@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, Alert } from "react-native";
-import { Button } from 'react-native-elements';
+import { View, KeyboardAvoidingView, Alert } from "react-native";
+import { Button, Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Guess from "../components/Guess";
@@ -102,6 +102,7 @@ export default class Game extends React.Component {
   }
 
   handleGameOver = () => {
+    // ToFix
     Alert.alert(
       `Sorry, ${this.opponent} won.`,
       `"You ran out of time."`
@@ -114,7 +115,6 @@ export default class Game extends React.Component {
   }
 
   handleGuessSubmit = guess => {
-    // const isNotCorrect = false;
 
     const turn = this.state.turn === this.username ? this.opponent : this.username;
     const guessType = this.state.guessType === "movie" ? "actor" : "movie";
@@ -138,10 +138,11 @@ export default class Game extends React.Component {
   render() {
     console.log(`${this.username}'s state: ${JSON.stringify(this.state)}`)
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <View style={styles.topContent}>
-          <Text style={styles.bigText}>{this.username} vs {this.opponent}</Text>
+          <Text h2>{this.username} vs {this.opponent}</Text>
         </View>
+        {this.state.turn === this.username ? <View style={styles.container}><Text h1>Name {this.state.guessType === 'movie' ? this.state.opponent_guess.length ? `a movie that ${this.state.opponent_guess} was in.` : `a movie.` : this.state.opponent_guess.length ? `an actor or actress in ${this.state.opponent_guess}.` : `an actor or actress.`}</Text></View> : <View style={styles.container}><Text h1>{this.opponent}'s Turn</Text></View>}
         {this.state.turn === this.username ?
           <Guess
             handleGuess={guess => this.handleGuessSubmit(guess)}
@@ -152,7 +153,7 @@ export default class Game extends React.Component {
             turn={this.state.turn}
             guessType={this.state.guessType}
             previousGuess={this.state.my_guess} /> }
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -161,7 +162,9 @@ const styles = {
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "flex-start",
+    marginLeft: 5,
+    marginRight: 5
   },
   topContent: {
     flex: 1,
@@ -172,7 +175,8 @@ const styles = {
     fontWeight: "bold"
   },
   mainContent: {
-    flex: 1
+    flex: 1,
+    justifyContent: "flex-start"
   },
   label: {
     marginBottom: 5,

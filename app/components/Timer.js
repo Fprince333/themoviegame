@@ -25,7 +25,7 @@ export default class Timer extends React.Component {
           allowFontScaling={true}
           style={{ fontSize: 20, color: 'black' }}
         />
-        <Text>to guess { this.props.guessType === 'movie' ? this.props.previousGuess.length ? `a movie that ${this.props.previousGuess} was in.` : `a movie.` : this.props.previousGuess.length ? `an actor or actress in ${this.props.previousGuess}.` : `an actor or actress.` } </Text>
+        <Text>to name { this.props.guessType === 'movie' ? this.props.previousGuess.length ? `a movie that ${this.props.previousGuess} was in.` : `a movie.` : this.props.previousGuess.length ? `an actor or actress in ${this.props.previousGuess}.` : `an actor or actress.` } </Text>
       </View>
     );
   }
@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    height: "100%",
     alignItems: "center",
     justifyContent: "flex-start"
   }
