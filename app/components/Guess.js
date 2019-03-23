@@ -1,68 +1,7 @@
 import React from "react";
-import { View, Text, TextInput } from "react-native";
-import { Button } from 'react-native-elements';
-import TimerCountdown from "react-native-timer-countdown";
-
-export default class Guess extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      guess: ""
-    }
-  }
-
-  render() {
-
-    return (
-      <View style={styles.mainContent}>
-        <Text style={styles.label}>You have</Text>
-        <TimerCountdown
-          initialMilliseconds={1000 * 300}
-          formatMilliseconds={(milliseconds) => {
-            const remainingSec = Math.round(milliseconds / 1000);
-            const seconds = parseInt((remainingSec % 60).toString(), 10);
-            const minutes = parseInt(((remainingSec / 60) % 60).toString(), 10);
-            const hours = parseInt((remainingSec / 3600).toString(), 10);
-            const s = seconds < 10 ? '0' + seconds : seconds;
-            const m = minutes < 10 ? '0' + minutes : minutes;
-            let h = hours < 10 ? '0' + hours : hours;
-            h = h === '00' ? '' : h + ':';
-            return h + m + ':' + s;
-          }}
-          allowFontScaling={true}
-          style={{ fontSize: 20, color: 'black' }}
-        />
-        <TextInput
-          style={styles.text_field}
-          onChangeText={guess => {
-            this.setState({ guess: guess });
-          }}
-          value={this.state.guess}
-          placeholder={`to pick ${this.props.guessType === 'movie' ? 'a movie' : 'an actor or actress'}`}
-          returnKeyType='done'
-          onSubmitEditing={() => this.props.handleGuess(this.state.guess)}
-        />
-        {this.props.previousGuess.length ?
-          <View>
-            <Button
-              buttonStyle={{ backgroundColor: '#2089dc' }}
-              title="Challenge Your Opponent's Answer"
-              titleStyle={{color: '#FFF'}}
-              onPress={this.props.handleChallengePrevious}
-            />
-            <Button
-              buttonStyle={{ backgroundColor: '#2089dc' }}
-              title="Challenge Opponent To Answer"
-              titleStyle={{ color: '#FFF' }}
-              onPress={this.props.handleChallengeNext}
-            />
-          </View> :
-          null
-        }
-      </View>
-    );
-  }
-}
+import { View, TextInput } from "react-native";
+import { Overlay, Button, Text } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const styles = {
   mainContent: {
@@ -71,6 +10,11 @@ const styles = {
     alignItems: 'center',
     textAlign: 'center',
     width: '100%'
+  },
+  modalContent: {
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
   label: {
     marginBottom: 5,
@@ -89,3 +33,85 @@ const styles = {
     textAlign: "center"
   }
 };
+
+class GuessText extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      guess: ""
+     }
+  }
+  render() {
+    return (<TextInput
+      style={styles.text_field}
+      onChangeText={guess => {
+        this.setState({ guess: guess });
+      }}
+      value={this.state.guess}
+      returnKeyType='done'
+      onSubmitEditing={() => this.props.handleGuess(this.state.guess)}
+    /> );
+  }
+}
+
+class Challenge extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false
+    }
+  }
+
+  renderChallengeModal = () => {
+    this.setState({ showModal: true })
+  }
+
+  render() {
+    return (
+      <View>
+        <Button
+          buttonStyle={{ backgroundColor: '#2089dc' }}
+          title="Challenge"
+          titleStyle={{ color: '#FFF' }}
+          onPress={this.renderChallengeModal}
+        />
+        <Overlay
+          isVisible={this.state.showModal}
+          onBackdropPress={() => this.setState({ showModal: false })}
+          height="35%"
+        >
+          <React.Fragment>
+            <Icon name='times-circle' size={24} color="#2089dc" onPress={() => this.setState({ showModal: false })} />
+            <View style={styles.modalContent}>
+              {this.props.guessType === 'movie' && <Text h4>Was {this.props.previousGuess} in {this.props.currentGuess}?</Text>}
+              {this.props.guessType === 'actor' && <Text h4>Was {this.props.currentGuess} in {this.props.previousGuess}?</Text>}
+              <Button
+                buttonStyle={{ backgroundColor: '#2089dc' }}
+                title="Challenge Answer"
+                titleStyle={{ color: '#FFF' }}
+                onPress={this.props.handleChallengePrevious}
+              />
+              <Button
+                buttonStyle={{ backgroundColor: '#2089dc' }}
+                title="Challenge Opponent"
+                titleStyle={{ color: '#FFF' }}
+                onPress={this.props.handleChallengeNext}
+              />
+            </View>
+          </React.Fragment>
+        </Overlay>
+      </View>
+    );
+  }
+}
+
+const Guess = props => {
+  return (
+    <View style={styles.mainContent}>
+      <GuessText handleGuess={props.handleGuess}/>
+      {props.previousGuess.length ? <Challenge {...props} /> : null }
+    </View>
+  );
+}
+
+export default Guess;

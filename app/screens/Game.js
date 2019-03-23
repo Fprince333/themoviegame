@@ -5,8 +5,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Guess from "../components/Guess";
 import Timer from "../components/Timer";
+import GameStatus from '../components/GameStatus';
 
 import formatChannelName from "../helpers/formatChannelName";
+import { movieApi } from "../helpers/theMovieDatabase";
 
 export default class Game extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -136,8 +138,36 @@ export default class Game extends React.Component {
 
   };
 
-  handleChallengePrevious = () => {
-    // TODO: Check against movie database api to verify answer
+  handleChallengePrevious = async () => {
+    if (this.state.guessType === "actor") {
+      const movieId = await movieApi.getMovieId(this.state.opponent_guess);
+      const isInMovie = await movieApi.isActorInMovie(this.state.opponent_guess, movieId);
+      if (isInMovie) {
+        this.my_channel.trigger("client-opponent-won", {
+          winner: this.opponent,
+          reason: "Challenge lost!"
+        });
+      } else {
+        this.opponent_channel.trigger("client-opponent-won", {
+          winner: this.username,
+          reason: "Challenge won!"
+        });
+      }
+    } else {
+      const movieId = await movieApi.getMovieId(this.state.my_guess);
+      const isInMovie = await movieApi.isActorInMovie(this.state.opponent_guess, movieId);
+      if (isInMovie) {
+        this.my_channel.trigger("client-opponent-won", {
+          winner: this.opponent,
+          reason: "Challenge lost!"
+        });
+      } else {
+        this.opponent_channel.trigger("client-opponent-won", {
+          winner: this.username,
+          reason: "Challenge won!"
+        });
+      }
+    }
   }
 
   handleChallengeNext = () => {
@@ -155,19 +185,15 @@ export default class Game extends React.Component {
         <View style={styles.topContent}>
           <Text h2>{this.username} vs {this.opponent}</Text>
         </View>
-        {this.state.turn === this.username ? <View style={styles.container}><Text h1>Name {this.state.guessType === 'movie' ? this.state.opponent_guess.length ? `a movie that ${this.state.opponent_guess} was in.` : `a movie.` : this.state.opponent_guess.length ? `an actor or actress in ${this.state.opponent_guess}.` : `an actor or actress.`}</Text></View> : <View style={styles.container}><Text h1>{this.opponent}'s Turn</Text></View>}
+        <GameStatus {...this.state} player={this.username} opponent={this.opponent} handleTimeUp={() => this.handleGameOver()}/>
         {this.state.turn === this.username ?
           <Guess
             handleGuess={guess => this.handleGuessSubmit(guess)}
             guessType={this.state.guessType}
             previousGuess={this.state.opponent_guess}
+            currentGuess={this.state.my_guess}
             handleChallengePrevious={() => this.handleChallengePrevious()}
-            handleChallengeNext={() => this.handleChallengeNext()} /> :
-          <Timer
-            handleTimeUp={() => this.handleGameOver()}
-            turn={this.state.turn}
-            guessType={this.state.guessType}
-            previousGuess={this.state.my_guess} /> }
+            handleChallengeNext={() => this.handleChallengeNext()} /> : null }
       </KeyboardAvoidingView>
     );
   }
