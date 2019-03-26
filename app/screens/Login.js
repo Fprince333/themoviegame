@@ -31,12 +31,9 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled keyboardVerticalOffset={-200} >
         <View style={styles.topContent}>
-          <Text h2 h2Style={{color: '#FFF'}}>The Movie Game</Text>
-        </View>
-
-        <View style={styles.icon}>
+          <Text h2 h2Style={{color: '#FFF', marginBottom: 30 }}>The Movie Game</Text>
           <Icon name="film" color="#FFF" size={75} />
         </View>
 
@@ -78,7 +75,7 @@ export default class Login extends React.Component {
       });
 
       this.pusher = new Pusher("f9eaa640678326ebe543", {
-        authEndpoint: "https://466b3f6a.ngrok.io/pusher/auth",
+        authEndpoint: "https://787e1ec9.ngrok.io/pusher/auth",
         cluster: "us2",
         encrypted: true,
         auth: {
@@ -107,7 +104,7 @@ export default class Login extends React.Component {
       });
 
       this.my_channel.bind("pusher:subscription_succeeded", data => {
-        console.log("subscription ok: ", data);
+        console.log("subscription ok: ", this.state.username);
 
         this.my_channel.bind("opponent-found", data => {
           console.log("opponent found: ", data);
@@ -144,6 +141,7 @@ const styles = {
   },
   topContent: {
     flex: 1,
+    alignItems: "center",
     justifyContent: "center",
     marginTop: 50
   },
@@ -151,12 +149,6 @@ const styles = {
     flex: 1,
     justifyContent: "flex-start",
     marginBottom: 200
-  },
-  icon: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start",
-    marginTop: 50
   },
   label: {
     marginTop: 15,
