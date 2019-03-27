@@ -82,7 +82,9 @@ export default class Game extends React.Component {
       opponent_guess: '',
       guessType: 'movie',
       isReadyToPlay: false,
-      challenge: false
+      challenge: false,
+      usedActors: [],
+      usedMovies: []
     }
   }
 
@@ -112,12 +114,19 @@ export default class Game extends React.Component {
       console.log("opponent subscription ok: ", this.opponent);
       this.opponent_channel.bind("client-opponent-guessed", data => {
         console.log("opponent guess: ", data.guess);
-        this.setState({
-          turn: data.turn,
-          guessType: data.guessType,
-          opponent_guess: data.guess,
-          challenge: data.isChallenge
-        });
+        data.guessType === 'actor' ?
+          this.setState({
+            usedMovies: data.usedMovies,
+            turn: data.turn,
+            guessType: data.guessType,
+            opponent_guess: data.guess,
+            challenge: data.isChallenge }) :
+          this.setState({
+            usedActors: data.usedActors,
+            turn: data.turn,
+            guessType: data.guessType,
+            opponent_guess: data.guess,
+            challenge: data.isChallenge })
       });
 
       this.opponent_channel.bind("client-opponent-won", data => {
@@ -151,16 +160,23 @@ export default class Game extends React.Component {
   random = async () => {
     const turn = this.state.turn === this.username ? this.opponent : this.username;
     const guessType = "actor";
-    const randomMovie = await movieApi.getRandomMovie();
+    const usedMovies = this.state.usedMovies;
+    let randomMovie = await movieApi.getRandomMovie();
+    if (usedMovies.includes(randomMovie)) {
+      randomMovie = await movieApi.getRandomMovie();
+    }
+    usedMovies.push(randomMovie);
     this.setState({
       turn: turn,
       guessType: guessType,
-      my_guess: randomMovie
+      my_guess: randomMovie,
+      usedMovies: usedMovies
     });
     this.my_channel.trigger("client-opponent-guessed", {
       turn: turn,
       guessType: guessType,
-      guess: randomMovie
+      guess: randomMovie,
+      usedMovies: usedMovies
     })
   }
 
@@ -183,21 +199,21 @@ export default class Game extends React.Component {
       if (isInMovie) {
         this.my_channel.trigger("client-opponent-won", {
           winner: this.opponent,
-          reason: `${this.state.my_guess} was in ${guess}`
-        });
-        Alert.alert(
-          `You lost`,
-          `${this.state.my_guess} was in ${guess}`
-        );
-        this.props.navigation.navigate("Login", {});
-      } else {
-        this.opponent_channel.trigger("client-opponent-won", {
-          winner: this.username,
-          reason: `${this.state.my_guess} wasn't in ${guess}`
+          reason: `${guess} was also in ${this.state.my_guess}`
         });
         Alert.alert(
           `You won!`,
-          `${this.state.my_guess} wasn't in ${guess}`
+          `${guess} was also in ${this.state.my_guess}`
+        );
+        this.props.navigation.navigate("Login", {});
+      } else {
+        this.my_channel.trigger("client-opponent-won", {
+          winner: this.username,
+          reason: `${guess} wasn't in ${this.state.my_guess}`
+        });
+        Alert.alert(
+          `You won!`,
+          `${guess} wasn't in ${this.state.my_guess}`
         );
         this.props.navigation.navigate("Login", {});
       }
@@ -207,11 +223,11 @@ export default class Game extends React.Component {
       if (isInMovie) {
         this.my_channel.trigger("client-opponent-won", {
           winner: this.username,
-          reason: `${this.state.opponent_guess} was in ${guess}`
+          reason: `${this.state.opponent_guess} was also in ${guess}`
         });
         Alert.alert(
           `You won!`,
-          `${this.state.opponent_guess} was in ${guess}`
+          `${this.state.opponent_guess} was also in ${guess}`
         );
         this.props.navigation.navigate("Login", {});
       } else {
@@ -228,16 +244,61 @@ export default class Game extends React.Component {
     } else {
       const turn = this.state.turn === this.username ? this.opponent : this.username;
       const guessType = this.state.guessType === "movie" ? "actor" : "movie";
-      this.setState({
-        turn: turn,
-        guessType: guessType,
-        my_guess: guess
-      });
-      this.my_channel.trigger("client-opponent-guessed", {
-        turn: turn,
-        guessType: guessType,
-        guess: guess
-      })
+      let usedMovies = this.state.usedMovies;
+      let usedActors = this.state.usedActors;
+      if (this.state.guessType === "movie") {
+        if (usedMovies.includes(guess)) {
+          this.my_channel.trigger("client-opponent-won", {
+            winner: this.opponent,
+            reason: `${guess} was already used.`
+          });
+          Alert.alert(
+            `You lost`,
+            `${guess} was already used.`
+          );
+          this.props.navigation.navigate("Login", {});
+        } else {
+          usedMovies.push(guess);
+          this.setState({
+            turn: turn,
+            guessType: guessType,
+            my_guess: guess,
+            usedMovies: usedMovies
+          });
+          this.my_channel.trigger("client-opponent-guessed", {
+            turn: turn,
+            guessType: guessType,
+            guess: guess,
+            usedMovies: usedMovies
+          })
+        }
+      } else {
+        if (usedActors.includes(guess)) {
+          this.my_channel.trigger("client-opponent-won", {
+            winner: this.opponent,
+            reason: `${guess} was already used.`
+          });
+          Alert.alert(
+            `You lost`,
+            `${guess} was already used.`
+          );
+          this.props.navigation.navigate("Login", {});
+        } else {
+          usedActors.push(guess);
+          this.setState({
+            turn: turn,
+            guessType: guessType,
+            my_guess: guess,
+            usedActors: usedActors
+          });
+          this.my_channel.trigger("client-opponent-guessed", {
+            turn: turn,
+            guessType: guessType,
+            guess: guess,
+            usedActors: usedActors
+          })
+        }
+      }
     }
   };
 
