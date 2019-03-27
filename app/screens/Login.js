@@ -75,7 +75,7 @@ export default class Login extends React.Component {
       });
 
       this.pusher = new Pusher("f9eaa640678326ebe543", {
-        authEndpoint: "https://787e1ec9.ngrok.io/pusher/auth",
+        authEndpoint: "https://the-movie-game.herokuapp.com/pusher/auth",
         cluster: "us2",
         encrypted: true,
         auth: {
