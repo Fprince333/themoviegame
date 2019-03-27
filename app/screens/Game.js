@@ -180,7 +180,7 @@ export default class Game extends React.Component {
     })
   }
 
-  handleGameOver = () => {
+  handleTimeUp = () => {
     this.my_channel.trigger("client-opponent-won", {
       winner: "You",
       reason: `${this.username} ran out of time.`
@@ -188,6 +188,18 @@ export default class Game extends React.Component {
     Alert.alert(
       `You Lost`,
       `You ran out of time.`
+    );
+    this.props.navigation.navigate("Login", {});
+  }
+
+  handleGiveUp = () => {
+    this.my_channel.trigger("client-opponent-won", {
+      winner: "You",
+      reason: `${this.username} gave up`
+    });
+    Alert.alert(
+      `You Lost`,
+      `You quit`
     );
     this.props.navigation.navigate("Login", {});
   }
@@ -375,7 +387,7 @@ export default class Game extends React.Component {
     console.log(`${this.username ? this.username : 'Initial'} state: ${JSON.stringify(this.state)}`)
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <GameStatus {...this.state} player={this.username} opponent={this.opponent} handleTimeUp={() => this.handleGameOver()}/>
+        <GameStatus {...this.state} player={this.username} opponent={this.opponent} handleTimeUp={() => this.handleTimeUp()}/>
         {this.state.isReadyToPlay && this.state.turn === this.username &&
           <Guess
             restart={this.restart}
@@ -385,7 +397,7 @@ export default class Game extends React.Component {
             previousGuess={this.state.opponent_guess}
             currentGuess={this.state.my_guess}
             challenge={this.state.challenge}
-            giveUp={() => this.handleGameOver()}
+            giveUp={() => this.handleGiveUp()}
             handleChallengePrevious={() => this.handleChallengePrevious()}
             handleChallengeNext={() => this.handleChallengeNext()} /> }
       </KeyboardAvoidingView>
