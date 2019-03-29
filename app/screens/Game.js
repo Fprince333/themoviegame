@@ -111,9 +111,7 @@ export default class Game extends React.Component {
     });
 
     this.opponent_channel.bind("pusher:subscription_succeeded", data => {
-      console.log("opponent subscription ok: ", this.opponent);
       this.opponent_channel.bind("client-opponent-guessed", data => {
-        console.log("opponent guess: ", data.guess);
         data.guessType === 'actor' ?
           this.setState({
             usedMovies: data.usedMovies,
@@ -130,7 +128,6 @@ export default class Game extends React.Component {
       });
 
       this.opponent_channel.bind("client-opponent-won", data => {
-        console.log("winner: ", data.winner);
         Alert.alert(
           `${data.winner} won`,
           `${data.reason}`
@@ -384,7 +381,6 @@ export default class Game extends React.Component {
   };
 
   render() {
-    console.log(`${this.username ? this.username : 'Initial'} state: ${JSON.stringify(this.state)}`)
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <GameStatus {...this.state} player={this.username} opponent={this.opponent} handleTimeUp={() => this.handleTimeUp()}/>

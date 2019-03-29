@@ -32,7 +32,6 @@ const ReadyPlayer = props => {
 }
 
 const WaitingPlayer = props => {
-  console.log(props);
   return (
     <View style={styles.container}>
       {props.challenge && <Badge status="error" value="Challenge!" textStyle={{color: '#FFF', fontSize: 16 }}></Badge>}
