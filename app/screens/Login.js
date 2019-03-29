@@ -112,11 +112,6 @@ export default class Login extends React.Component {
 
           let starter = data.player_two;
 
-          this.setState({
-            is_loading: false,
-            username: ""
-          });
-
           this.props.navigation.navigate("Game", {
             pusher: this.pusher,
             username: username,
@@ -124,6 +119,12 @@ export default class Login extends React.Component {
             starter: starter,
             my_channel: this.my_channel
           });
+
+          this.setState({
+            is_loading: false,
+            username: ""
+          });
+
         });
       });
     }
