@@ -33,7 +33,7 @@ function formatChannelName(name) {
 
 app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
-
+  console.log(req.body)
   if (users.indexOf(username) === -1) {
     users.push(username);
 

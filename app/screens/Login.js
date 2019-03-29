@@ -112,6 +112,11 @@ export default class Login extends React.Component {
 
           let starter = data.player_two;
 
+          this.setState({
+            is_loading: false,
+            username: ""
+          });
+
           this.props.navigation.navigate("Game", {
             pusher: this.pusher,
             username: username,
