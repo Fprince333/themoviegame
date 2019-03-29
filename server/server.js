@@ -33,11 +33,12 @@ function formatChannelName(name) {
 
 app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
-  console.log(users);
+
   if (users.indexOf(username) === -1) {
     users.push(username);
 
     if (users.length === 2) {
+      console.log(users);
       var player_one_index = randomArrayIndex(users.length);
       var player_one = users.splice(player_one_index, 1)[0];
 
@@ -53,6 +54,8 @@ app.post("/pusher/auth", function (req, res) {
           player_two: player_two
         }
       );
+    } else if (users.length > 2) {
+      res.sendStatus(400);
     }
 
     var socketId = req.body.socket_id;
