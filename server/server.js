@@ -38,7 +38,6 @@ app.post("/pusher/auth", function (req, res) {
     users.push(username);
 
     if (users.length === 2) {
-      console.log(users);
       var player_one_index = randomArrayIndex(users.length);
       var player_one = users.splice(player_one_index, 1)[0];
 

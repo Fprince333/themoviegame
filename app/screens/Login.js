@@ -43,6 +43,7 @@ export default class Login extends React.Component {
             <React.Fragment>
               <Text style={styles.label}>Enter Username</Text>
               <TextInput
+                ref={component => this._textInput = component}
                 style={styles.text_field}
                 onChangeText={username => {
                   this.setState({ username });
@@ -67,6 +68,7 @@ export default class Login extends React.Component {
   }
 
   login = () => {
+    this._textInput.blur();
     let username = this.state.username;
 
     if (username) {
@@ -112,6 +114,11 @@ export default class Login extends React.Component {
 
           let starter = data.player_two;
 
+          this.setState({
+            is_loading: false,
+            username: ""
+          });
+
           this.props.navigation.navigate("Game", {
             pusher: this.pusher,
             username: username,
@@ -120,10 +127,6 @@ export default class Login extends React.Component {
             my_channel: this.my_channel
           });
 
-          this.setState({
-            is_loading: false,
-            username: ""
-          });
 
         });
       });
