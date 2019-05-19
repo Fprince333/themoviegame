@@ -27,10 +27,6 @@ function randomArrayIndex(max) {
   return Math.floor(Math.random() * max);
 }
 
-function formatChannelName(name) {
-  return name.toLowerCase().split(" ").join("-");
-}
-
 app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
   console.log(req.body)
@@ -38,7 +34,7 @@ app.post("/pusher/auth", function (req, res) {
   if (users.indexOf(username) === -1) {
     users.push(username);
 
-    if (users.length === 2) {
+    if (users.length >= 2) {
       var player_one_index = randomArrayIndex(users.length);
       var player_one = users.splice(player_one_index, 1)[0];
 
@@ -47,7 +43,7 @@ app.post("/pusher/auth", function (req, res) {
 
       // trigger a message to player one and player two on their own channels
       pusher.trigger(
-        ["private-user-" + formatChannelName(player_one), "private-user-" + formatChannelName(player_two)],
+        ["private-user-" + player_one, "private-user-" + player_two],
         "opponent-found",
         {
           player_one: player_one,

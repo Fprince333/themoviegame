@@ -11,8 +11,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Pusher from "pusher-js/react-native";
 
-import formatChannelName from "../helpers/formatChannelName";
-
 export default class Login extends React.Component {
   static navigationOptions = {
     header: null
@@ -85,7 +83,7 @@ export default class Login extends React.Component {
         }
       });
 
-      this.my_channel = this.pusher.subscribe(`private-user-${formatChannelName(username)}`);
+      this.my_channel = this.pusher.subscribe(`private-user-${username}`);
       this.my_channel.bind("pusher:subscription_error", status => {
         if (status === 406) {
           Alert.alert(
