@@ -105,9 +105,9 @@ export default class Login extends React.Component {
         this.my_channel.bind("opponent-found", data => {
 
           let opponent =
-            username == data.player_one ? data.player_two : data.player_one;
+            username == data.player_one.name ? data.player_two : data.player_one;
 
-          let starter = data.player_one;
+          let starter = data.player_one.name;
 
           this.setState({
             is_loading: false,
@@ -119,7 +119,8 @@ export default class Login extends React.Component {
             username: username,
             opponent: opponent,
             starter: starter,
-            my_channel: this.my_channel
+            my_channel: this.my_channel,
+            opponent_channel: opponent.channel
           });
 
 

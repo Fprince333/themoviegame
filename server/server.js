@@ -50,8 +50,8 @@ app.post("/pusher/auth", function (req, res) {
         [player_one.channel, player_two.channel],
         "opponent-found",
         {
-          player_one: player_one.name,
-          player_two: player_two.name
+          player_one: player_one,
+          player_two: player_two
         }
       );
     }

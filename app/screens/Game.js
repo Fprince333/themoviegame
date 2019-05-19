@@ -102,7 +102,7 @@ export default class Game extends React.Component {
     })
 
     this.opponent_channel = this.pusher.subscribe(
-      `private-user-${formatChannelName(this.opponent)}`
+      this.opponent.channel
     );
 
     this.opponent_channel.bind("pusher:subscription_error", status => {
@@ -140,7 +140,7 @@ export default class Game extends React.Component {
   }
 
   restart = () => {
-    const turn = this.state.turn === this.username ? this.opponent : this.username;
+    const turn = this.state.turn === this.username ? this.opponent.name.name : this.username;
     const guessType = "movie";
     this.setState({
       turn: turn,
@@ -154,7 +154,7 @@ export default class Game extends React.Component {
   }
 
   random = async () => {
-    const turn = this.state.turn === this.username ? this.opponent : this.username;
+    const turn = this.state.turn === this.username ? this.opponent.name.name : this.username;
     const guessType = "actor";
     const usedMovies = this.state.usedMovies;
     let randomMovie = await movieApi.getRandomMovie();
@@ -206,7 +206,7 @@ export default class Game extends React.Component {
       const isInMovie = await movieApi.isActorInMovie(guess, movieId);
       if (isInMovie) {
         this.my_channel.trigger("client-opponent-won", {
-          winner: this.opponent,
+          winner: this.opponent.name.name,
           reason: `${guess} was also in ${this.state.my_guess}`
         });
         Alert.alert(
@@ -250,14 +250,14 @@ export default class Game extends React.Component {
         this.props.navigation.navigate("Login", {});
       }
     } else {
-      const turn = this.state.turn === this.username ? this.opponent : this.username;
+      const turn = this.state.turn === this.username ? this.opponent.name : this.username;
       const guessType = this.state.guessType === "movie" ? "actor" : "movie";
       let usedMovies = this.state.usedMovies;
       let usedActors = this.state.usedActors;
       if (this.state.guessType === "movie") {
         if (usedMovies.includes(guess)) {
           this.my_channel.trigger("client-opponent-won", {
-            winner: this.opponent,
+            winner: this.opponent.name,
             reason: `${guess} was already used.`
           });
           Alert.alert(
@@ -283,7 +283,7 @@ export default class Game extends React.Component {
       } else {
         if (usedActors.includes(guess)) {
           this.my_channel.trigger("client-opponent-won", {
-            winner: this.opponent,
+            winner: this.opponent.name,
             reason: `${guess} was already used.`
           });
           Alert.alert(
@@ -316,7 +316,7 @@ export default class Game extends React.Component {
       const isInMovie = await movieApi.isActorInMovie(this.state.my_guess, movieId);
       if (isInMovie) {
         this.my_channel.trigger("client-opponent-won", {
-          winner: this.opponent,
+          winner: this.opponent.name,
           reason: `Challenge lost! ${this.state.my_guess} was in ${this.state.opponent_guess}`
         });
         Alert.alert(
@@ -338,7 +338,7 @@ export default class Game extends React.Component {
       const isInMovie = await movieApi.isActorInMovie(this.state.opponent_guess, movieId);
       if (isInMovie) {
         this.my_channel.trigger("client-opponent-won", {
-          winner: this.opponent,
+          winner: this.opponent.name,
           reason: `Challenge lost! ${this.state.opponent_guess} was in ${this.state.my_guess}`
         });
         Alert.alert(
@@ -360,7 +360,7 @@ export default class Game extends React.Component {
   }
 
   handleChallengeNext = () => {
-    const turn = this.state.turn === this.username ? this.opponent : this.username;
+    const turn = this.state.turn === this.username ? this.opponent.name : this.username;
     this.setState({
       turn: turn,
       my_guess: this.state.my_guess,
@@ -382,7 +382,7 @@ export default class Game extends React.Component {
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <GameStatus {...this.state} player={this.username} opponent={this.opponent} handleTimeUp={() => this.handleTimeUp()}/>
+        <GameStatus {...this.state} player={this.username} opponent={this.opponent.name} handleTimeUp={() => this.handleTimeUp()}/>
         {this.state.isReadyToPlay && this.state.turn === this.username &&
           <Guess
             restart={this.restart}
