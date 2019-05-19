@@ -40,20 +40,18 @@ app.post("/pusher/auth", function (req, res) {
 
     if (users.length === 2) {
       var player_one_index = randomArrayIndex(users.length);
-      var player_one = users.splice(player_one_index, 1)[0].name;
-      var player_one_channel = users.splice(player_one_index, 1)[0].channel;
+      var player_one = users.splice(player_one_index, 1)[0];
 
       var player_two_index = randomArrayIndex(users.length);
-      var player_two = users.splice(player_two_index, 1)[0].name;
-      var player_two_channel = users.splice(player_two_index, 1)[0].channel;
+      var player_two = users.splice(player_two_index, 1)[0];
 
       // trigger a message to player one and player two on their own channels
       pusher.trigger(
-        [player_one_channel, player_two_channel],
+        [player_one.channel, player_two.channel],
         "opponent-found",
         {
-          player_one: player_one,
-          player_two: player_two
+          player_one: player_one.name,
+          player_two: player_two.name
         }
       );
     }
