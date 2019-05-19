@@ -41,32 +41,28 @@ app.post("/pusher/auth", function (req, res) {
     var auth = pusher.authenticate(socketId, channel);
 
     res.send(auth);
-    console.log(users);
-    if (users.length === 2) {
-      var player_one_index = randomArrayIndex(users.length);
-      var player_one = users.splice(player_one_index, 1)[0];
+  }
+  if (users.length === 2) {
+    var player_one_index = randomArrayIndex(users.length);
+    var player_one = users.splice(player_one_index, 1)[0];
 
-      var player_two_index = randomArrayIndex(users.length);
-      var player_two = users.splice(player_two_index, 1)[0];
+    var player_two_index = randomArrayIndex(users.length);
+    var player_two = users.splice(player_two_index, 1)[0];
 
-      // trigger a message to player one and player two on their own channels
-      console.log("triggering")
-      users = [];
-      pusher.trigger(
-        [player_one.channel, player_two.channel],
-        "opponent-found",
-        {
-          player_one: player_one,
-          player_two: player_two
-        }
-      );
-    }
-  } else {
-    if (users.length && users[0].name === username) {
-      res.sendStatus(406);
-    } else {
-      res.sendStatus(400);
-    }
+    // trigger a message to player one and player two on their own channels
+    console.log("triggering")
+    users = [];
+    pusher.trigger(
+      [player_one.channel, player_two.channel],
+      "opponent-found",
+      {
+        player_one: player_one,
+        player_two: player_two
+      }
+    );
+  }
+  if (users.length && users[0].name === username) {
+    res.sendStatus(406);
   }
 });
 
