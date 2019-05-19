@@ -59,6 +59,7 @@ app.post("/pusher/auth", function (req, res) {
           player_two: player_two
         }
       );
+      users = [];
     }
   } else {
     if (users.length && users[0].name === username) {
