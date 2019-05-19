@@ -30,7 +30,7 @@ function randomArrayIndex(max) {
 app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
 
-  if (!users.length || users.length && users[0].name !== username) {
+  if (!users.length || users.length && users.length < 2 && users[0].name !== username) {
     var player = {
       name: username,
       channel: req.body.channel_name
