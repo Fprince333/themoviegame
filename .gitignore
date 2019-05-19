@@ -3,6 +3,7 @@ node_modules/**/*
 npm-debug.*
 .DS_Store
 yarn.lock
+package-lock.json
 server/node_modules
 server/package-lock.json
 server/.env
