@@ -36,7 +36,11 @@ app.post("/pusher/auth", function (req, res) {
       channel: req.body.channel_name
     }
     users.push(player);
+    var socketId = req.body.socket_id;
+    var channel = req.body.channel_name;
+    var auth = pusher.authenticate(socketId, channel);
 
+    res.send(auth);
     if (users.length === 2) {
       var player_one_index = randomArrayIndex(users.length);
       var player_one = users.splice(player_one_index, 1)[0];
@@ -56,11 +60,6 @@ app.post("/pusher/auth", function (req, res) {
         }
       );
     }
-    var socketId = req.body.socket_id;
-    var channel = req.body.channel_name;
-    var auth = pusher.authenticate(socketId, channel);
-
-    res.send(auth);
   } else {
     if (users[0].name === username) {
       res.sendStatus(406);

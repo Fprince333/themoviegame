@@ -99,32 +99,31 @@ export default class Login extends React.Component {
         }
 
       });
-
       this.my_channel.bind("pusher:subscription_succeeded", data => {
+        console.log("succeeded");
+      });
+      this.my_channel.bind("opponent-found", data => {
+        let opponent =
+          username == data.player_one.name ? data.player_two : data.player_one;
 
-        this.my_channel.bind("opponent-found", data => {
-          let opponent =
-            username == data.player_one.name ? data.player_two : data.player_one;
+        let starter = data.player_one.name;
 
-          let starter = data.player_one.name;
+        this.setState({
+          is_loading: false,
+          username: ""
+        });
 
-          this.setState({
-            is_loading: false,
-            username: ""
-          });
-
-          this.props.navigation.navigate("Game", {
-            pusher: this.pusher,
-            username: username,
-            opponent: opponent.name,
-            starter: starter,
-            my_channel: this.my_channel,
-            opponent_channel: opponent.channel
-          });
+        this.props.navigation.navigate("Game", {
+          pusher: this.pusher,
+          username: username,
+          opponent: opponent.name,
+          starter: starter,
+          my_channel: this.my_channel,
+          opponent_channel: opponent.channel
+        });
 
 
         });
-      });
     }
   };
 }
