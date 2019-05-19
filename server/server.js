@@ -45,7 +45,7 @@ app.post("/pusher/auth", function (req, res) {
 
       var player_two_index = randomArrayIndex(users.length);
       var player_two = users.splice(player_two_index, 1)[0].name;
-      var player_two_channel = users.splice(player_one_index, 1)[0].channel;
+      var player_two_channel = users.splice(player_two_index, 1)[0].channel;
 
       // trigger a message to player one and player two on their own channels
       pusher.trigger(
