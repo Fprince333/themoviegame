@@ -59,7 +59,7 @@ app.post("/pusher/auth", function (req, res) {
     }
 
     var socketId = req.body.socket_id;
-    var channel = formatChannelName(req.body.channel_name);
+    var channel = req.body.channel_name;
     var auth = pusher.authenticate(socketId, channel);
 
     res.send(auth);
