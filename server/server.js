@@ -36,7 +36,9 @@ app.post("/pusher/auth", function (req, res) {
       name: username,
       channel: req.body.channel_name
     }
-    users.push(player);
+    if (!gameOn) {
+      users.push(player);
+    }
     if (users.length === 2) {
       gameOn = true;
     }
