@@ -53,8 +53,6 @@ app.post("/pusher/auth", function (req, res) {
 
     // trigger a message to player one and player two on their own channels
     console.log("triggering")
-    gameOn = false;
-    users = [];
     pusher.trigger(
       [player_one.channel, player_two.channel],
       "opponent-found",
