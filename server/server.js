@@ -54,13 +54,13 @@ app.post("/pusher/auth", function (req, res) {
           player_two: player_two
         }
       );
+    } else {
+      var socketId = req.body.socket_id;
+      var channel = req.body.channel_name;
+      var auth = pusher.authenticate(socketId, channel);
+
+      res.send(auth);
     }
-
-    var socketId = req.body.socket_id;
-    var channel = req.body.channel_name;
-    var auth = pusher.authenticate(socketId, channel);
-
-    res.send(auth);
   } else {
     if (users[0].name === username) {
       res.sendStatus(406);

@@ -117,7 +117,7 @@ export default class Login extends React.Component {
           this.props.navigation.navigate("Game", {
             pusher: this.pusher,
             username: username,
-            opponent: opponent,
+            opponent: opponent.name,
             starter: starter,
             my_channel: this.my_channel,
             opponent_channel: opponent.channel
