@@ -36,11 +36,11 @@ app.post("/pusher/auth", function (req, res) {
       name: username,
       channel: req.body.channel_name
     }
-    if (!gameOn) {
-      users.push(player);
-    }
     if (users.length === 2) {
       gameOn = true;
+    }
+    if (!gameOn) {
+      users.push(player);
     }
     console.log("users: " + users.length);
   }
@@ -54,6 +54,7 @@ app.post("/pusher/auth", function (req, res) {
     // trigger a message to player one and player two on their own channels
     console.log("triggering")
     gameOn = false;
+    users = [];
     pusher.trigger(
       [player_one.channel, player_two.channel],
       "opponent-found",
