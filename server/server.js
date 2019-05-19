@@ -36,11 +36,6 @@ app.post("/pusher/auth", function (req, res) {
       channel: req.body.channel_name
     }
     users.push(player);
-    var socketId = req.body.socket_id;
-    var channel = req.body.channel_name;
-    var auth = pusher.authenticate(socketId, channel);
-
-    res.send(auth);
   }
   if (users.length === 2) {
     var player_one_index = randomArrayIndex(users.length);
@@ -61,9 +56,11 @@ app.post("/pusher/auth", function (req, res) {
       }
     );
   }
-  if (users.length && users[0].name === username) {
-    res.sendStatus(406);
-  }
+  var socketId = req.body.socket_id;
+  var channel = req.body.channel_name;
+  var auth = pusher.authenticate(socketId, channel);
+
+  res.send(auth);
 });
 
 var port = process.env.PORT || 3000;
