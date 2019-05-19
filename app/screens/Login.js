@@ -103,7 +103,6 @@ export default class Login extends React.Component {
       this.my_channel.bind("pusher:subscription_succeeded", data => {
 
         this.my_channel.bind("opponent-found", data => {
-
           let opponent =
             username == data.player_one.name ? data.player_two : data.player_one;
 

@@ -29,7 +29,6 @@ function randomArrayIndex(max) {
 
 app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
-  console.log(req.body)
 
   if (users.length < 2) {
     var player = {
@@ -46,6 +45,8 @@ app.post("/pusher/auth", function (req, res) {
       var player_two = users.splice(player_two_index, 1)[0];
 
       // trigger a message to player one and player two on their own channels
+      console.log("triggering")
+
       pusher.trigger(
         [player_one.channel, player_two.channel],
         "opponent-found",
@@ -54,13 +55,12 @@ app.post("/pusher/auth", function (req, res) {
           player_two: player_two
         }
       );
-    } else {
-      var socketId = req.body.socket_id;
-      var channel = req.body.channel_name;
-      var auth = pusher.authenticate(socketId, channel);
-
-      res.send(auth);
     }
+    var socketId = req.body.socket_id;
+    var channel = req.body.channel_name;
+    var auth = pusher.authenticate(socketId, channel);
+
+    res.send(auth);
   } else {
     if (users[0].name === username) {
       res.sendStatus(406);
