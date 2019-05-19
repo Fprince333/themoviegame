@@ -36,6 +36,7 @@ app.post("/pusher/auth", function (req, res) {
       channel: req.body.channel_name
     }
     users.push(player);
+    console.log("users: " + users.length);
   }
   if (users.length === 2) {
     var player_one_index = randomArrayIndex(users.length);
@@ -46,7 +47,7 @@ app.post("/pusher/auth", function (req, res) {
 
     // trigger a message to player one and player two on their own channels
     console.log("triggering")
-    users = [];
+    console.log("users: " + users.length);
     pusher.trigger(
       [player_one.channel, player_two.channel],
       "opponent-found",

@@ -136,6 +136,10 @@ export default class Game extends React.Component {
 
   }
 
+  componentWillUnmount() {
+    this.pusher.disconnect();
+  }
+
   restart = () => {
     const turn = this.state.turn === this.username ? this.opponent.name.name : this.username;
     const guessType = "movie";
