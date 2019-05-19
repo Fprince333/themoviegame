@@ -31,27 +31,31 @@ app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
   console.log(req.body)
 
-  if (users.indexOf(username) === -1) {
-    users.push(username);
+  if (users.length < 2) {
+    var player = {
+      name: username,
+      channel: req.body.channel_name
+    }
+    users.push(player);
 
-    if (users.length >= 2) {
+    if (users.length === 2) {
       var player_one_index = randomArrayIndex(users.length);
-      var player_one = users.splice(player_one_index, 1)[0];
+      var player_one = users.splice(player_one_index, 1)[0].name;
+      var player_one_channel = users.splice(player_one_index, 1)[0].channel;
 
       var player_two_index = randomArrayIndex(users.length);
-      var player_two = users.splice(player_two_index, 1)[0];
+      var player_two = users.splice(player_two_index, 1)[0].name;
+      var player_two_channel = users.splice(player_one_index, 1)[0].channel;
 
       // trigger a message to player one and player two on their own channels
       pusher.trigger(
-        ["private-user-" + player_one, "private-user-" + player_two],
+        [player_one_channel, player_two_channel],
         "opponent-found",
         {
           player_one: player_one,
           player_two: player_two
         }
       );
-    } else if (users.length > 2) {
-      res.sendStatus(400);
     }
 
     var socketId = req.body.socket_id;
@@ -60,7 +64,7 @@ app.post("/pusher/auth", function (req, res) {
 
     res.send(auth);
   } else {
-    if (users[0] === username) {
+    if (users[0].name === username) {
       res.sendStatus(406);
     } else {
       res.sendStatus(400);

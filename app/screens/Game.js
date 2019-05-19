@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Guess from "../components/Guess";
 import GameStatus from '../components/GameStatus';
 
-import formatChannelName from "../helpers/formatChannelName";
 import { movieApi } from "../helpers/theMovieDatabase";
 
 const styles = {

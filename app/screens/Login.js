@@ -68,6 +68,7 @@ export default class Login extends React.Component {
   login = () => {
     this._textInput.blur();
     let username = this.state.username;
+    let channelName = `private-user-${Math.floor(Math.random() * 1000000)}`
 
     if (username) {
       this.setState({
@@ -83,7 +84,7 @@ export default class Login extends React.Component {
         }
       });
 
-      this.my_channel = this.pusher.subscribe(`private-user-${username}`);
+      this.my_channel = this.pusher.subscribe(channelName);
       this.my_channel.bind("pusher:subscription_error", status => {
         if (status === 406) {
           Alert.alert(
@@ -96,10 +97,6 @@ export default class Login extends React.Component {
             "A subscription error occurred. Please try again."
           );
         }
-        this.setState({
-          is_loading: false,
-          username: ""
-        });
 
       });
 
@@ -110,7 +107,7 @@ export default class Login extends React.Component {
           let opponent =
             username == data.player_one ? data.player_two : data.player_one;
 
-          let starter = data.player_two;
+          let starter = data.player_one;
 
           this.setState({
             is_loading: false,
