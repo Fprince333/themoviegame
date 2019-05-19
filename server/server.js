@@ -9,6 +9,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 require("dotenv").config();
 
 var users = [];
+var gameOn = false;
 
 var pusher = new Pusher({
   // connect to pusher
@@ -36,9 +37,12 @@ app.post("/pusher/auth", function (req, res) {
       channel: req.body.channel_name
     }
     users.push(player);
+    if (users.length === 2) {
+      gameOn = true;
+    }
     console.log("users: " + users.length);
   }
-  if (users.length === 2) {
+  if (users.length === 2 && gameOn) {
     var player_one_index = randomArrayIndex(users.length);
     var player_one = users.splice(player_one_index, 1)[0];
 
@@ -47,7 +51,7 @@ app.post("/pusher/auth", function (req, res) {
 
     // trigger a message to player one and player two on their own channels
     console.log("triggering")
-    console.log("users: " + users.length);
+    gameOn = false;
     pusher.trigger(
       [player_one.channel, player_two.channel],
       "opponent-found",
