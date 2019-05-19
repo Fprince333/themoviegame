@@ -30,7 +30,7 @@ function randomArrayIndex(max) {
 app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
 
-  if (users.length < 2) {
+  if (users.length && users[0].name !== username) {
     var player = {
       name: username,
       channel: req.body.channel_name
@@ -61,7 +61,7 @@ app.post("/pusher/auth", function (req, res) {
       );
     }
   } else {
-    if (users[0].name === username) {
+    if (users.length && users[0].name === username) {
       res.sendStatus(406);
     } else {
       res.sendStatus(400);
