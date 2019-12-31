@@ -1,6 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-var Pusher = require("pusher-js");
+var Pusher = require("pusher");
 
 var app = express();
 app.use(bodyParser.json());
@@ -39,7 +39,7 @@ app.post("/pusher/auth", function (req, res) {
     if (!gameOn) {
       users.push(player);
     }
-    if (users.length === 2) {
+    if (users.length === 2 && !req.body.game_over) {
       gameOn = true;
     }
     console.log("users: " + users.length);

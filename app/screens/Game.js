@@ -129,7 +129,7 @@ export default class Game extends React.Component {
           `${data.reason}`
         );
         this.setState({ isReadyToPlay: false });
-        this.props.navigation.navigate("Login", {});
+        this.props.navigation.navigate("Login", { game_over: true });
       });
 
     });
@@ -186,7 +186,7 @@ export default class Game extends React.Component {
       `You Lost`,
       `You ran out of time.`
     );
-    this.props.navigation.navigate("Login", {});
+    this.props.navigation.navigate("Login", { game_over: true });
   }
 
   handleGiveUp = () => {
@@ -198,7 +198,7 @@ export default class Game extends React.Component {
       `You Lost`,
       `You quit`
     );
-    this.props.navigation.navigate("Login", {});
+    this.props.navigation.navigate("Login", { game_over: true });
   }
 
   handleGuessSubmit = async guess => {
@@ -214,7 +214,7 @@ export default class Game extends React.Component {
           `You won!`,
           `${guess} was also in ${this.state.my_guess}`
         );
-        this.props.navigation.navigate("Login", {});
+        this.props.navigation.navigate("Login", { game_over: true });
       } else {
         this.my_channel.trigger("client-opponent-won", {
           winner: this.username,
@@ -224,7 +224,7 @@ export default class Game extends React.Component {
           `You won!`,
           `${guess} wasn't in ${this.state.my_guess}`
         );
-        this.props.navigation.navigate("Login", {});
+        this.props.navigation.navigate("Login", { game_over: true });
       }
     } else if (this.state.challenge && this.state.guessType === "movie") {
       const movieId = await movieApi.getMovieId(guess);
@@ -238,7 +238,7 @@ export default class Game extends React.Component {
           `You won!`,
           `${this.state.opponent_guess} was also in ${guess}`
         );
-        this.props.navigation.navigate("Login", {});
+        this.props.navigation.navigate("Login", { game_over: true });
       } else {
         this.my_channel.trigger("client-opponent-won", {
           winner: this.username,
@@ -248,7 +248,7 @@ export default class Game extends React.Component {
           `You lost`,
           `${guess} wasn't in ${this.state.opponent_guess}`
         );
-        this.props.navigation.navigate("Login", {});
+        this.props.navigation.navigate("Login", { game_over: true });
       }
     } else {
       const turn = this.state.turn === this.username ? this.opponent : this.username;
@@ -265,7 +265,7 @@ export default class Game extends React.Component {
             `You lost`,
             `${guess} was already used.`
           );
-          this.props.navigation.navigate("Login", {});
+          this.props.navigation.navigate("Login", { game_over: true });
         } else {
           usedMovies.push(guess);
           this.setState({
@@ -291,7 +291,7 @@ export default class Game extends React.Component {
             `You lost`,
             `${guess} was already used.`
           );
-          this.props.navigation.navigate("Login", {});
+          this.props.navigation.navigate("Login", { game_over: true });
         } else {
           usedActors.push(guess);
           this.setState({
@@ -357,7 +357,7 @@ export default class Game extends React.Component {
         );
       }
     }
-    this.props.navigation.navigate("Login", {});
+    this.props.navigation.navigate("Login", { game_over: true });
   }
 
   handleChallengeNext = () => {
@@ -377,7 +377,7 @@ export default class Game extends React.Component {
 
   resetGame = () => {
     this.setState({ isReadyToPlay: false });
-    this.props.navigation.navigate("Login", {});
+    this.props.navigation.navigate("Login", { game_over: true });
   };
 
   render() {
