@@ -25,7 +25,7 @@ app.get("/", function (req, res) {
 
 app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
-
+  console.log(username)
   if (users.length < 2) {
     var player = {
       name: username,
