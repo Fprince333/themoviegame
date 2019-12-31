@@ -26,7 +26,7 @@ app.get("/", function (req, res) {
 app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
 
-  if (!users.length || users.length && users.length < 2 && users[0].name !== username) {
+  if (users.length < 2 && users[0].name !== username) {
     var player = {
       name: username,
       channel: req.body.channel_name
@@ -35,10 +35,10 @@ app.post("/pusher/auth", function (req, res) {
     console.log("users: " + users.length);
   }
   if (users.length === 2) {
-    var player_one_index = users.length - 1;
+    var player_one_index = 0;
     var player_one = users.splice(player_one_index, 1)[0];
 
-    var player_two_index = users.length - 1;
+    var player_two_index = 1;
     var player_two = users.splice(player_two_index, 1)[0];
 
     // trigger a message to player one and player two on their own channels
@@ -55,6 +55,7 @@ app.post("/pusher/auth", function (req, res) {
       }
     );
   }
+  console.log("users: " + users.length);
   var socketId = req.body.socket_id;
   var channel = req.body.channel_name;
   var auth = pusher.authenticate(socketId, channel);
