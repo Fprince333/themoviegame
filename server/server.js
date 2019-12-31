@@ -35,11 +35,8 @@ app.post("/pusher/auth", function (req, res) {
     console.log("users: " + users.length);
   }
   if (users.length === 2) {
-    var player_one_index = 0;
-    var player_one = users.splice(player_one_index, 1)[0];
-
-    var player_two_index = 1;
-    var player_two = users.splice(player_two_index, 1)[0];
+    var player_one = users.splice(0, 1)[0];
+    var player_two = users.splice(0, 1)[0];
 
     // trigger a message to player one and player two on their own channels
     console.log("triggering game for: ")
