@@ -26,7 +26,7 @@ app.get("/", function (req, res) {
 app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
 
-  if (users.length < 2 && users[0].name !== username) {
+  if (users.length < 2) {
     var player = {
       name: username,
       channel: req.body.channel_name
