@@ -118,8 +118,7 @@ export default class Login extends React.Component {
             opponent: opponent.name,
             starter: starter,
             my_channel: this.my_channel,
-            opponent_channel: opponent.channel, 
-            game_over: false
+            opponent_channel: opponent.channel
           });
 
         });

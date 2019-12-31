@@ -9,7 +9,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 require("dotenv").config();
 
 var users = [];
-var gameOn = false;
 
 var pusher = new Pusher({
   // connect to pusher
@@ -24,12 +23,7 @@ app.get("/", function (req, res) {
   res.send("all green...");
 });
 
-function randomArrayIndex(max) {
-  return Math.floor(Math.random() * max);
-}
-
 app.post("/pusher/auth", function (req, res) {
-  console.log(req.body)
   var username = req.body.username;
 
   if (!users.length || users.length && users.length < 2 && users[0].name !== username) {
@@ -37,21 +31,14 @@ app.post("/pusher/auth", function (req, res) {
       name: username,
       channel: req.body.channel_name
     }
-    if (!gameOn) {
-      users.push(player);
-    }
-    if (users.length === 2 && !req.body.game_over) {
-      gameOn = true;
-    } else {
-      gameOn = false;
-    }
+    users.push(player);
     console.log("users: " + users.length);
   }
-  if (users.length === 2 && gameOn) {
-    var player_one_index = randomArrayIndex(users.length);
+  if (users.length === 2) {
+    var player_one_index = users.length - 1;
     var player_one = users.splice(player_one_index, 1)[0];
 
-    var player_two_index = randomArrayIndex(users.length);
+    var player_two_index = users.length - 1;
     var player_two = users.splice(player_two_index, 1)[0];
 
     // trigger a message to player one and player two on their own channels
