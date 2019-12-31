@@ -42,7 +42,10 @@ app.post("/pusher/auth", function (req, res) {
     var player_two = users.splice(player_two_index, 1)[0];
 
     // trigger a message to player one and player two on their own channels
-    console.log("triggering")
+    console.log("triggering game for: ")
+    console.log(player_one.name)
+    console.log("vs")
+    console.log(player_two.name)
     pusher.trigger(
       [player_one.channel, player_two.channel],
       "opponent-found",
