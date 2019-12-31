@@ -41,6 +41,8 @@ app.post("/pusher/auth", function (req, res) {
     }
     if (users.length === 2 && !req.body.game_over) {
       gameOn = true;
+    } else {
+      gameOn = false;
     }
     console.log("users: " + users.length);
   }
