@@ -29,6 +29,7 @@ function randomArrayIndex(max) {
 }
 
 app.post("/pusher/auth", function (req, res) {
+  console.log(req.body)
   var username = req.body.username;
 
   if (!users.length || users.length && users.length < 2 && users[0].name !== username) {

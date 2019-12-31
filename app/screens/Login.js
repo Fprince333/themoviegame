@@ -69,7 +69,6 @@ export default class Login extends React.Component {
     this._textInput.blur();
     let username = this.state.username;
     let channelName = `private-user-${Math.floor(Math.random() * 1000000)}`
-
     if (username) {
       this.setState({
         is_loading: true
