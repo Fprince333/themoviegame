@@ -61,8 +61,6 @@ app.post("/pusher/auth", function (req, res) {
         player_two: player_two
       }
     );
-  } else {
-    debugger
   }
   var socketId = req.body.socket_id;
   var channel = req.body.channel_name;
