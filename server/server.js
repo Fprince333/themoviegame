@@ -25,7 +25,10 @@ app.get("/", function (req, res) {
 
 app.post("/pusher/auth", function (req, res) {
   var username = req.body.username;
-  console.log(username)
+  var socketId = req.body.socket_id;
+  var channel = req.body.channel_name;
+  var auth = pusher.authenticate(socketId, channel);
+  res.send(auth);
   if (users.length < 2) {
     var player = {
       name: username,
@@ -52,12 +55,6 @@ app.post("/pusher/auth", function (req, res) {
       }
     );
   }
-  console.log("users: " + users.length);
-  var socketId = req.body.socket_id;
-  var channel = req.body.channel_name;
-  var auth = pusher.authenticate(socketId, channel);
-
-  res.send(auth);
 });
 
 var port = process.env.PORT || 3000;

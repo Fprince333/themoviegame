@@ -5,7 +5,7 @@ import CountDown from 'react-native-countdown-component';
 
 const styles = {
   container: {
-    flex: 1,
+    flex: 1, 
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",

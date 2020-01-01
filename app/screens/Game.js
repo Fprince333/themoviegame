@@ -85,6 +85,7 @@ export default class Game extends React.Component {
       usedActors: [],
       usedMovies: []
     }
+    this.baseState = this.state;
   }
 
   componentDidMount() {
@@ -129,8 +130,7 @@ export default class Game extends React.Component {
           `${data.reason}`
         );
         this.setState({ isReadyToPlay: false });
-        this.my_channel.unbind();
-        this.props.navigation.navigate("Login", { });
+        this.resetGame()
       });
 
     });
@@ -139,6 +139,7 @@ export default class Game extends React.Component {
 
   componentWillUnmount() {
     this.pusher.disconnect();
+    this.setState(this.baseState)
   }
 
   restart = () => {
@@ -153,6 +154,7 @@ export default class Game extends React.Component {
       guessType: guessType,
       guess: ""
     })
+
   }
 
   random = async () => {
@@ -187,8 +189,7 @@ export default class Game extends React.Component {
       `You Lost`,
       `You ran out of time.`
     );
-    this.my_channel.unbind();
-    this.props.navigation.navigate("Login", { });
+    this.resetGame();
   }
 
   handleGiveUp = () => {
@@ -200,8 +201,7 @@ export default class Game extends React.Component {
       `You Lost`,
       `You quit`
     );
-    this.my_channel.unbind();
-    this.props.navigation.navigate("Login", { });
+    this.resetGame();
   }
 
   handleGuessSubmit = async guess => {
@@ -217,8 +217,7 @@ export default class Game extends React.Component {
           `You won!`,
           `${guess} was also in ${this.state.my_guess}`
         );
-        this.my_channel.unbind();
-        this.props.navigation.navigate("Login", { });
+        this.resetGame()
       } else {
         this.my_channel.trigger("client-opponent-won", {
           winner: this.username,
@@ -228,8 +227,7 @@ export default class Game extends React.Component {
           `You won!`,
           `${guess} wasn't in ${this.state.my_guess}`
         );
-        this.my_channel.unbind();
-        this.props.navigation.navigate("Login", { });
+        this.resetGame()
       }
     } else if (this.state.challenge && this.state.guessType === "movie") {
       const movieId = await movieApi.getMovieId(guess);
@@ -243,8 +241,7 @@ export default class Game extends React.Component {
           `You won!`,
           `${this.state.opponent_guess} was also in ${guess}`
         );
-        this.my_channel.unbind();
-        this.props.navigation.navigate("Login", { });
+        this.resetGame()
       } else {
         this.my_channel.trigger("client-opponent-won", {
           winner: this.username,
@@ -254,8 +251,7 @@ export default class Game extends React.Component {
           `You lost`,
           `${guess} wasn't in ${this.state.opponent_guess}`
         );
-        this.my_channel.unbind();
-        this.props.navigation.navigate("Login", { });
+        this.resetGame()
       }
     } else {
       const turn = this.state.turn === this.username ? this.opponent : this.username;
@@ -272,8 +268,7 @@ export default class Game extends React.Component {
             `You lost`,
             `${guess} was already used.`
           );
-          this.my_channel.unbind();
-          this.props.navigation.navigate("Login", { });
+          this.resetGame()
         } else {
           usedMovies.push(guess);
           this.setState({
@@ -366,8 +361,7 @@ export default class Game extends React.Component {
         );
       }
     }
-    this.my_channel.unbind();
-    this.props.navigation.navigate("Login", { });
+    this.resetGame()
   }
 
   handleChallengeNext = () => {

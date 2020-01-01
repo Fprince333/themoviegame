@@ -25,6 +25,11 @@ export default class Login extends React.Component {
     super(props);
     this.pusher = null;
     this.my_channel = null;
+    this.baseState = this.state;
+  }
+
+  componentWillUnmount() {
+    this.setState(this.baseState)
   }
 
   render() {
