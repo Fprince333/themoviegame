@@ -73,7 +73,6 @@ export default class Login extends React.Component {
       this.setState({
         is_loading: true
       });
-
       this.pusher = new Pusher("f9eaa640678326ebe543", {
         authEndpoint: "https://the-movie-game.herokuapp.com/pusher/auth",
         cluster: "us2",
@@ -85,6 +84,8 @@ export default class Login extends React.Component {
 
       this.my_channel = this.pusher.subscribe(channelName);
       this.my_channel.bind("pusher:subscription_error", status => {
+        this.my_channel.unbind();
+        this.pusher.unsubscribe(channelName)
         if (status === 406) {
           Alert.alert(
             "Error",
@@ -100,7 +101,6 @@ export default class Login extends React.Component {
       });
 
       this.my_channel.bind("pusher:subscription_succeeded", data => {
-
         this.my_channel.bind("opponent-found", data => {
           let opponent =
             username == data.player_one.name ? data.player_two : data.player_one;

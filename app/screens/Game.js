@@ -129,6 +129,7 @@ export default class Game extends React.Component {
           `${data.reason}`
         );
         this.setState({ isReadyToPlay: false });
+        this.my_channel.unbind();
         this.props.navigation.navigate("Login", { });
       });
 
@@ -186,6 +187,7 @@ export default class Game extends React.Component {
       `You Lost`,
       `You ran out of time.`
     );
+    this.my_channel.unbind();
     this.props.navigation.navigate("Login", { });
   }
 
@@ -198,6 +200,7 @@ export default class Game extends React.Component {
       `You Lost`,
       `You quit`
     );
+    this.my_channel.unbind();
     this.props.navigation.navigate("Login", { });
   }
 
@@ -214,6 +217,7 @@ export default class Game extends React.Component {
           `You won!`,
           `${guess} was also in ${this.state.my_guess}`
         );
+        this.my_channel.unbind();
         this.props.navigation.navigate("Login", { });
       } else {
         this.my_channel.trigger("client-opponent-won", {
@@ -224,6 +228,7 @@ export default class Game extends React.Component {
           `You won!`,
           `${guess} wasn't in ${this.state.my_guess}`
         );
+        this.my_channel.unbind();
         this.props.navigation.navigate("Login", { });
       }
     } else if (this.state.challenge && this.state.guessType === "movie") {
@@ -238,6 +243,7 @@ export default class Game extends React.Component {
           `You won!`,
           `${this.state.opponent_guess} was also in ${guess}`
         );
+        this.my_channel.unbind();
         this.props.navigation.navigate("Login", { });
       } else {
         this.my_channel.trigger("client-opponent-won", {
@@ -248,6 +254,7 @@ export default class Game extends React.Component {
           `You lost`,
           `${guess} wasn't in ${this.state.opponent_guess}`
         );
+        this.my_channel.unbind();
         this.props.navigation.navigate("Login", { });
       }
     } else {
@@ -265,6 +272,7 @@ export default class Game extends React.Component {
             `You lost`,
             `${guess} was already used.`
           );
+          this.my_channel.unbind();
           this.props.navigation.navigate("Login", { });
         } else {
           usedMovies.push(guess);
@@ -291,6 +299,7 @@ export default class Game extends React.Component {
             `You lost`,
             `${guess} was already used.`
           );
+          this.my_channel.unbind();
           this.props.navigation.navigate("Login", { });
         } else {
           usedActors.push(guess);
@@ -357,6 +366,7 @@ export default class Game extends React.Component {
         );
       }
     }
+    this.my_channel.unbind();
     this.props.navigation.navigate("Login", { });
   }
 
@@ -377,6 +387,7 @@ export default class Game extends React.Component {
 
   resetGame = () => {
     this.setState({ isReadyToPlay: false });
+    this.my_channel.unbind();
     this.props.navigation.navigate("Login", { });
   };
 
