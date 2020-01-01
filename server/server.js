@@ -58,6 +58,7 @@ app.post("/pusher/auth", function (req, res) {
         player_two: player_two
       }
     );
+    res.status(200).send("game on")
   }
 });
 
