@@ -42,7 +42,7 @@ app.post("/pusher/auth", function(req, res) {
 
       // trigger a message to player one and player two on their own channels
       pusher.trigger(
-        ["presence-user-" + player_one, "presence-user-" + player_two],
+        ["private-user-" + player_one, "private-user-" + player_two],
         "opponent-found",
         {
           player_one: player_one,
