@@ -383,7 +383,7 @@ export default class Game extends React.Component {
   }
 
   resetGame = () => {
-    this.setState({ isReadyToPlay: false });
+    this.setState(this.baseState)
     this.my_channel.unbind();
     this.props.navigation.navigate("Login", { });
   };

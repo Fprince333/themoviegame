@@ -90,7 +90,7 @@ export default class Login extends React.Component {
       this.my_channel = this.pusher.subscribe(`private-user-${username}`);
       this.my_channel.bind("pusher:subscription_error", status => {
         this.my_channel.unbind();
-        this.pusher.unsubscribe(channelName)
+        this.pusher.unsubscribe(`private-user-${username}`)
         if (status === 406) {
           Alert.alert(
             "Error",
@@ -110,9 +110,9 @@ export default class Login extends React.Component {
         this.my_channel.bind("opponent-found", data => {
           console.log("opponent found: ", data);
           let opponent =
-            username == data.player_one.name ? data.player_two : data.player_one;
+            username == data.player_one ? data.player_two : data.player_one;
 
-          let starter = data.player_one.name;
+          let starter = data.player_one;
 
           this.setState({
             is_loading: false,
