@@ -96,44 +96,47 @@ export default class Game extends React.Component {
 
     this.username = navigation.getParam("username");
     this.opponent = navigation.getParam("opponent");
-    this.opponent_channel = this.pusher.subscribe(navigation.getParam("opponent_channel"));
+
+    if (this.opponent) {
+      this.opponent_channel = this.pusher.subscribe(
+        `private-user-${this.opponent}`
+      );
+      this.opponent_channel.bind("pusher:subscription_error", status => {
+        Alert.alert("Subscription error", status);
+      });
+      this.opponent_channel.bind("pusher:subscription_succeeded", data => {
+        this.opponent_channel.bind("client-opponent-guessed", data => {
+          data.guessType === 'actor' ?
+            this.setState({
+              usedMovies: data.usedMovies,
+              turn: data.turn,
+              guessType: data.guessType,
+              opponent_guess: data.guess,
+              challenge: data.isChallenge }) :
+            this.setState({
+              usedActors: data.usedActors,
+              turn: data.turn,
+              guessType: data.guessType,
+              opponent_guess: data.guess,
+              challenge: data.isChallenge })
+        });
+
+        this.opponent_channel.bind("client-opponent-won", data => {
+          Alert.alert(
+            `${data.winner} won`,
+            `${data.reason}`
+          );
+          this.setState({ isReadyToPlay: false });
+          this.resetGame()
+        });
+
+      });
+    }
 
     this.setState({
       turn: navigation.getParam("starter"),
       isReadyToPlay: true
     })
-
-    this.opponent_channel.bind("pusher:subscription_error", status => {
-      Alert.alert("Subscription error", status);
-    });
-
-    this.opponent_channel.bind("pusher:subscription_succeeded", data => {
-      this.opponent_channel.bind("client-opponent-guessed", data => {
-        data.guessType === 'actor' ?
-          this.setState({
-            usedMovies: data.usedMovies,
-            turn: data.turn,
-            guessType: data.guessType,
-            opponent_guess: data.guess,
-            challenge: data.isChallenge }) :
-          this.setState({
-            usedActors: data.usedActors,
-            turn: data.turn,
-            guessType: data.guessType,
-            opponent_guess: data.guess,
-            challenge: data.isChallenge })
-      });
-
-      this.opponent_channel.bind("client-opponent-won", data => {
-        Alert.alert(
-          `${data.winner} won`,
-          `${data.reason}`
-        );
-        this.setState({ isReadyToPlay: false });
-        this.resetGame()
-      });
-
-    });
 
   }
 

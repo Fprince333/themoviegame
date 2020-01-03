@@ -23,37 +23,41 @@ app.get("/", function (req, res) {
   res.send("all green...");
 });
 
-app.post("/pusher/auth", function (req, res) {
-  var username = req.body.username;
-  var socketId = req.body.socket_id;
-  var channel = req.body.channel_name;
-  var auth = pusher.authenticate(socketId, channel);
-  res.send(auth);
-  if (users.length < 2) {
-    var player = {
-      name: username,
-      channel: req.body.channel_name
-    }
-    users.push(player);
-    console.log("users: " + users.length);
-  }
-  if (users.length === 2) {
-    var player_one = users.splice(0, 1)[0];
-    var player_two = users.splice(0, 1)[0];
+function randomArrayIndex(max) {
+  return Math.floor(Math.random() * max);
+}
 
-    // trigger a message to player one and player two on their own channels
-    console.log("triggering game for: ")
-    console.log(player_one.name)
-    console.log("vs")
-    console.log(player_two.name)
-    pusher.trigger(
-      [player_one.channel, player_two.channel],
-      "opponent-found",
-      {
-        player_one: player_one,
-        player_two: player_two
-      }
-    );
+app.post("/pusher/auth", function(req, res) {
+  var username = req.body.username;
+
+  if (users.indexOf(username) === -1) {
+    users.push(username);
+
+    if (users.length >= 2) {
+      var player_one_index = randomArrayIndex(users.length);
+      var player_one = users.splice(player_one_index, 1)[0];
+
+      var player_two_index = randomArrayIndex(users.length);
+      var player_two = users.splice(player_two_index, 1)[0];
+
+      // trigger a message to player one and player two on their own channels
+      pusher.trigger(
+        ["private-user-" + player_one, "private-user-" + player_two],
+        "opponent-found",
+        {
+          player_one: player_one,
+          player_two: player_two
+        }
+      );
+    }
+
+    var socketId = req.body.socket_id;
+    var channel = req.body.channel_name;
+    var auth = pusher.authenticate(socketId, channel);
+
+    res.send(auth);
+  } else {
+    res.status(400);
   }
 });
 
