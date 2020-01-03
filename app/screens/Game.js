@@ -99,7 +99,7 @@ export default class Game extends React.Component {
 
     if (this.opponent) {
       this.opponent_channel = this.pusher.subscribe(
-        `private-user-${this.opponent}`
+        `presence-user-${this.opponent}`
       );
       this.opponent_channel.bind("pusher:subscription_error", status => {
         Alert.alert("Subscription error", status);

@@ -87,10 +87,10 @@ export default class Login extends React.Component {
         }
       });
 
-      this.my_channel = this.pusher.subscribe(`private-user-${username}`);
+      this.my_channel = this.pusher.subscribe(`presence-user-${username}`);
       this.my_channel.bind("pusher:subscription_error", status => {
         this.my_channel.unbind();
-        this.pusher.unsubscribe(`private-user-${username}`)
+        this.pusher.unsubscribe(`presence-user-${username}`)
         if (status === 406) {
           Alert.alert(
             "Error",
