@@ -146,7 +146,7 @@ export default class Game extends React.Component {
   }
 
   restart = () => {
-    const turn = this.state.turn === this.username ? this.opponent.name.name : this.username;
+    const turn = this.state.turn === this.username ? this.opponent : this.username;
     const guessType = "movie";
     this.setState({
       turn: turn,
@@ -161,7 +161,7 @@ export default class Game extends React.Component {
   }
 
   random = async () => {
-    const turn = this.state.turn === this.username ? this.opponent.name : this.username;
+    const turn = this.state.turn === this.username ? this.opponent : this.username;
     const guessType = "actor";
     const usedMovies = this.state.usedMovies;
     let randomMovie = await movieApi.getRandomMovie();

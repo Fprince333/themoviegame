@@ -113,7 +113,7 @@ export default class Login extends React.Component {
             username == data.player_one ? data.player_two : data.player_one;
 
           let starter = data.player_one;
-
+          Alert.alert("Opponent found!", `${opponent} will take you on!`);
           this.setState({
             is_loading: false,
             username: ""
