@@ -23,42 +23,61 @@ app.get("/", function (req, res) {
   res.send("all green...");
 });
 
-function randomArrayIndex(max) {
-  return Math.floor(Math.random() * max);
-}
+app.get("/opponent-found", function(req, res) {
+  var unique_users = users.filter((value, index, self) => {
+    return self.indexOf(value) === index;
+  });
+
+  var player_one = unique_users[0];
+  var player_two = unique_users[1];
+
+  console.log("opponent found: " + player_one + " and " + player_two);
+
+  pusher.trigger(
+    ["private-user-" + player_one, "private-user-" + player_two],
+    "opponent-found",
+    {
+      player_one: player_one,
+      player_two: player_two
+    }
+  );
+
+  res.send("opponent found!");
+});
+
+app.get("/start-game", function(req, res) {
+  var unique_users = users.filter((value, index, self) => {
+    return self.indexOf(value) === index;
+  });
+
+  var player_one = unique_users[0];
+  var player_two = unique_users[1];
+
+  console.log("start game: " + player_one + " and " + player_two);
+
+  pusher.trigger(
+    ["private-user-" + player_one, "private-user-" + player_two],
+    "start-game",
+    {
+      start: true
+    }
+  );
+
+  users = [];
+
+  res.send("start game!");
+});
 
 app.post("/pusher/auth", function(req, res) {
+  var socketId = req.body.socket_id;
+  var channel = req.body.channel_name;
   var username = req.body.username;
 
-  if (users.indexOf(username) === -1) {
-    users.push(username);
+  users.push(username);
+  console.log(username + " logged in");
 
-    if (users.length >= 2) {
-      var player_one_index = randomArrayIndex(users.length);
-      var player_one = users.splice(player_one_index, 1)[0];
-
-      var player_two_index = randomArrayIndex(users.length);
-      var player_two = users.splice(player_two_index, 1)[0];
-
-      // trigger a message to player one and player two on their own channels
-      pusher.trigger(
-        ["private-user-" + player_one, "private-user-" + player_two],
-        "opponent-found",
-        {
-          player_one: player_one,
-          player_two: player_two
-        }
-      );
-    }
-
-    var socketId = req.body.socket_id;
-    var channel = req.body.channel_name;
-    var auth = pusher.authenticate(socketId, channel);
-
-    res.send(auth);
-  } else {
-    res.status(400);
-  }
+  var auth = pusher.authenticate(socketId, channel);
+  res.send(auth);
 });
 
 var port = process.env.PORT || 3000;

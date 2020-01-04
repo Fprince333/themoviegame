@@ -18,18 +18,13 @@ export default class Login extends React.Component {
 
   state = {
     username: "",
-    is_loading: false
+    enteredGame: false
   };
 
   constructor(props) {
     super(props);
     this.pusher = null;
-    this.my_channel = null;
-    this.baseState = this.state;
-  }
-
-  componentWillUnmount() {
-    this.setState(this.baseState)
+    this.myChannel = null;
   }
 
   render() {
@@ -42,7 +37,7 @@ export default class Login extends React.Component {
 
         <View style={styles.mainContent}>
 
-          {!this.state.is_loading && (
+          {!this.state.enteredGame && (
             <React.Fragment>
               <Text style={styles.label}>Enter Username</Text>
               <TextInput
@@ -53,13 +48,13 @@ export default class Login extends React.Component {
                 }}
                 value={this.state.username}
                 selectionColor={'#FFF'}
-                onSubmitEditing={this.login}
+                onSubmitEditing={this.enterGame}
                 returnKeyType='go'
             />
             </React.Fragment>
           )}
 
-          {this.state.is_loading && (
+          {this.state.enteredGame && (
             <React.Fragment>
               <ActivityIndicator size="large" color="#FFF" />
               <Text style={styles.label}>Waiting For Opponent</Text>
@@ -70,13 +65,13 @@ export default class Login extends React.Component {
     );
   }
 
-  login = () => {
+  enterGame = async () => {
     this._textInput.blur();
-    let username = this.state.username;
+    const myUsername = this.state.username;
 
-    if (username) {
+    if (myUsername) {
       this.setState({
-        is_loading: true
+        enterGame: true
       });
       this.pusher = new Pusher("f9eaa640678326ebe543", {
         authEndpoint: "https://the-movie-game.herokuapp.com/pusher/auth",
@@ -87,10 +82,10 @@ export default class Login extends React.Component {
         }
       });
 
-      this.my_channel = this.pusher.subscribe(`private-user-${username}`);
-      this.my_channel.bind("pusher:subscription_error", status => {
-        this.my_channel.unbind();
-        this.pusher.unsubscribe(`private-user-${username}`)
+      this.myChannel = this.pusher.subscribe(`private-user-${myUsername}`);
+      this.myChannel.bind("pusher:subscription_error", status => {
+        this.myChannel.unbind();
+        this.pusher.unsubscribe(`private-user-${myUsername}`)
         if (status === 406) {
           Alert.alert(
             "Error",
@@ -105,26 +100,33 @@ export default class Login extends React.Component {
 
       });
 
-      this.my_channel.bind("pusher:subscription_succeeded", data => {
-        console.log("subscription ok: ", data);
-        this.my_channel.bind("opponent-found", data => {
+      this.myChannel.bind("pusher:subscription_succeeded", () => {
+        console.log("subscription ok");
+        this.myChannel.bind("opponent-found", data => {
           console.log("opponent found: ", data);
-          let opponent =
-            username == data.player_one ? data.player_two : data.player_one;
+          const opponentUsername =
+          myUsername == data.player_one ? data.player_two : data.player_one;
 
-          let starter = data.player_one;
+          const isPlayerOne = myUsername == data.player_one ? true : false;
           Alert.alert("Opponent found!", `${opponent} will take you on!`);
-          this.setState({
-            is_loading: false,
-            username: ""
+          this.opponentChannel = this.pusher.subscribe(`private-user-${opponentUsername}`)
+          this.opponentChannel.bind("pusher:subscription_error", data => {
+            console.log("Error subscribing to opponent's channel: ", data);
+          });
+          this.opponentChannel.bind("pusher:subscription_succeeded", () => {
+            this.props.navigation.navigate("Game", {
+              pusher: this.pusher,
+              isPlayerOne: isPlayerOne,
+              myUsername: myUsername,
+              myChannel: this.myChannel,
+              opponentUsername: opponentUsername,
+              opponentChannel: this.opponentChannel
+            });
           });
 
-          this.props.navigation.navigate("Game", {
-            pusher: this.pusher,
-            username: username,
-            opponent: opponent,
-            starter: starter,
-            my_channel: this.my_channel
+          this.setState({
+            enteredGame: false,
+            username: ""
           });
 
         });
