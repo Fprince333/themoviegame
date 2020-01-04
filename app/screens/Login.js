@@ -25,6 +25,7 @@ export default class Login extends React.Component {
     super(props);
     this.pusher = null;
     this.myChannel = null;
+    this.opponentChannel = null;
   }
 
   render() {
@@ -71,14 +72,14 @@ export default class Login extends React.Component {
 
     if (myUsername) {
       this.setState({
-        enterGame: true
+        enteredGame: true
       });
       this.pusher = new Pusher("f9eaa640678326ebe543", {
         authEndpoint: "https://the-movie-game.herokuapp.com/pusher/auth",
         cluster: "us2",
         encrypted: true,
         auth: {
-          params: { username: username }
+          params: { username: myUsername }
         }
       });
 
@@ -108,7 +109,7 @@ export default class Login extends React.Component {
           myUsername == data.player_one ? data.player_two : data.player_one;
 
           const isPlayerOne = myUsername == data.player_one ? true : false;
-          Alert.alert("Opponent found!", `${opponent} will take you on!`);
+          Alert.alert("Opponent found!", `${opponentUsername} will take you on!`);
           this.opponentChannel = this.pusher.subscribe(`private-user-${opponentUsername}`)
           this.opponentChannel.bind("pusher:subscription_error", data => {
             console.log("Error subscribing to opponent's channel: ", data);

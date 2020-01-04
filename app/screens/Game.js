@@ -107,21 +107,17 @@ export default class Game extends PureComponent {
           challenge: data.isChallenge })
     });
 
-      this.opponentChannel.bind("client-opponent-won", data => {
-        Alert.alert(
-          `${data.winner} won`,
-          `${data.reason}`
-        );
-        this.setState({ isReadyToPlay: false });
-        this.resetGame()
+    this.opponentChannel.bind("client-opponent-won", data => {
+      Alert.alert(
+        `${data.winner} won`,
+        `${data.reason}`
+      );
+      this.setState({ isReadyToPlay: false });
+      this.resetGame()
       });
 
-
-    this.myChannel.bind('start-game', () => {
-      Alert.alert('Game Start!', 'You may now navigate towards the black square.');
-      this.setState({
-        isReadyToPlay: true
-      });
+    this.setState({
+      isReadyToPlay: true
     });
 
   }
