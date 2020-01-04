@@ -26,7 +26,7 @@ const ReadyPlayer = props => {
         size={40}
         onFinish={props.handleTimeUp}
       />
-      <Text h4 h4Style={{textAlign: 'center'}}>to name {props.guessType === 'movie' ? props.opponent_guess.length ? `a movie that ${props.opponent_guess} was in.` : `a movie.` : props.opponent_guess.length ? `an actor or actress in ${props.opponent_guess}.` : `an actor or actress.`}</Text>
+      <Text h4 h4Style={{textAlign: 'center'}}>to name {props.guessType === 'movie' ? props.opponentGuess.length ? `a movie that ${props.opponentGuess} was in.` : `a movie.` : props.opponentGuess.length ? `an actor or actress in ${props.opponentGuess}.` : `an actor or actress.`}</Text>
     </View>
   )
 }
@@ -35,7 +35,7 @@ const WaitingPlayer = props => {
   return (
     <View style={styles.container}>
       {props.challenge && <Badge status="error" value="Challenge!" textStyle={{color: '#FFF', fontSize: 16 }}></Badge>}
-      <Text h4>{props.opponent} has</Text>
+      <Text h4>{props.opponentUsername} has</Text>
       <CountDown
         until={60}
         timeToShow={['M', 'S']}
@@ -43,8 +43,8 @@ const WaitingPlayer = props => {
         size={40}
       />
       { props.challenge ?
-        <Text h4 h4Style={{ textAlign: 'center' }}>to name {props.guessType === 'movie' ? props.opponent_guess.length ? `another movie that ${props.opponent_guess} was in.` : `a movie.` : props.opponent_guess.length ? `another actor or actress in ${props.opponent_guess}.` : `an actor or actress.`}</Text> :
-        <Text h4 h4Style={{ textAlign: 'center' }}>to name {props.guessType === 'movie' ? props.my_guess.length ? `a movie that ${props.my_guess} was in.` : `a movie.` : props.my_guess.length ? `an actor or actress in ${props.my_guess}.` : `an actor or actress.`}</Text>
+        <Text h4 h4Style={{ textAlign: 'center' }}>to name {props.guessType === 'movie' ? props.opponentGuess.length ? `another movie that ${props.opponentGuess} was in.` : `a movie.` : props.opponentGuess.length ? `another actor or actress in ${props.opponentGuess}.` : `an actor or actress.`}</Text> :
+        <Text h4 h4Style={{ textAlign: 'center' }}>to name {props.guessType === 'movie' ? props.myGuess.length ? `a movie that ${props.myGuess} was in.` : `a movie.` : props.myGuess.length ? `an actor or actress in ${props.myGuess}.` : `an actor or actress.`}</Text>
       }
 
     </View>

@@ -31,9 +31,6 @@ app.post("/pusher/auth", function(req, res) {
   users.push(username);
   console.log(username + " logged in");
 
-  var auth = pusher.authenticate(socketId, channel);
-  res.send(auth);
-
   if (users.length >= 2) {
     var unique_users = users.filter((value, index, self) => {
     return self.indexOf(value) === index;
@@ -53,6 +50,8 @@ app.post("/pusher/auth", function(req, res) {
       }
     )
     users = [];
+    var auth = pusher.authenticate(socketId, channel);
+    res.send(auth);
   }
 });
 
