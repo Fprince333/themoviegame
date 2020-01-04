@@ -27,17 +27,20 @@ app.post("/pusher/auth", function(req, res) {
   var socketId = req.body.socket_id;
   var channel = req.body.channel_name;
   var username = req.body.username;
+  var auth = pusher.authenticate(socketId, channel);
+  res.send(auth);
 
   users.push(username);
   console.log(username + " logged in");
 
-  if (users.length >= 2) {
+  if (users.length === 2) {
     var unique_users = users.filter((value, index, self) => {
     return self.indexOf(value) === index;
   });
 
     var player_one = unique_users[0];
     var player_two = unique_users[1];
+    users = [];
 
     console.log("opponent found: " + player_one + " and " + player_two);
 
@@ -49,9 +52,6 @@ app.post("/pusher/auth", function(req, res) {
         player_two: player_two
       }
     )
-    users = [];
-    var auth = pusher.authenticate(socketId, channel);
-    res.send(auth);
   }
 });
 
